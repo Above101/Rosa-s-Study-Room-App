@@ -228,6 +228,7 @@ const SECTIONS = [
 const st = {
   view: 'apikey',
   apiKey: '',
+  workerUrl: '',
   b64: null,
   fileName: '',
   selectedSections: SECTIONS.map(s => s.id),
@@ -261,12 +262,17 @@ function apikeyView() {
   return `<div class="key-screen">
     <div style="font-size:32px;margin-bottom:1rem">📋</div>
     <h1>Rosa's Study Room</h1>
-    <p>Enter your Anthropic API key to get started. Your key is stored only in this browser session and never sent anywhere except Anthropic's API.</p>
-    <div class="key-input-wrap">
-      <input type="password" id="api-key-input" placeholder="sk-ant-..." value="${st.apiKey}" />
-      <button class="btn btn-primary" id="key-submit">Continue</button>
+    <p>Enter your Worker URL and Anthropic API key to get started. Both are stored only in this browser session.</p>
+    <div style="margin-bottom:10px">
+      <label style="font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px">Cloudflare Worker URL</label>
+      <input type="text" id="worker-url-input" placeholder="https://your-worker.your-name.workers.dev" value="${st.workerUrl}" style="width:100%;padding:10px 14px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:14px;background:var(--surface);color:var(--text);font-family:'Inter',sans-serif;" />
     </div>
-    <p class="key-note">Get a free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> — free tier is sufficient for studying.</p>
+    <div style="margin-bottom:10px">
+      <label style="font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:6px">Anthropic API Key</label>
+      <input type="password" id="api-key-input" placeholder="sk-ant-..." value="${st.apiKey}" style="width:100%;padding:10px 14px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:14px;background:var(--surface);color:var(--text);font-family:'Inter',sans-serif;" />
+    </div>
+    <button class="btn btn-primary" id="key-submit" style="width:100%">Continue →</button>
+    <p class="key-note" style="margin-top:12px">Get a free API key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
   </div>`;
 }
 
@@ -483,9 +489,14 @@ function bind() {
 }
 
 function submitKey() {
-  const val = document.getElementById('api-key-input')?.value?.trim();
-  if (val && val.startsWith('sk-')) { st.apiKey = val; st.view = 'upload'; render(); }
-  else { alert('Please enter a valid Anthropic API key starting with sk-ant-'); }
+  const key = document.getElementById('api-key-input')?.value?.trim();
+  const url = document.getElementById('worker-url-input')?.value?.trim();
+  if (!url || !url.startsWith('https://')) { alert('Please enter your Cloudflare Worker URL (starts with https://)'); return; }
+  if (!key || !key.startsWith('sk-')) { alert('Please enter a valid Anthropic API key (starts with sk-ant-)'); return; }
+  st.apiKey = key;
+  st.workerUrl = url;
+  st.view = 'upload';
+  render();
 }
 
 function clearFile() { st.b64 = null; st.fileName = ''; render(); }
@@ -543,13 +554,11 @@ Return ONLY valid JSON — no markdown, no preamble:
 Return up to ${st.qCount} questions. Prioritize extracting real exam questions first, then generate from the content. Make distractors plausible — avoid obviously wrong answers.`;
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch(st.workerUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': st.apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-calls': 'true',
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
