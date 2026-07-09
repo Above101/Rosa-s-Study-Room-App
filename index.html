@@ -210,19 +210,20 @@
   <div id="app"></div>
 </main>
 
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script>
 const SECTIONS = [
-  { id: 'ltcala', label: 'LTC Administrator Licensing Act', law: '63 O.S. § 1-1949.1' },
-  { id: 'oac679', label: 'OAC 310:679 LTC Administrators', law: 'OAC 310:679' },
-  { id: 'pharmacy', label: 'Pharmacy', law: '59 O.S. § 367.3' },
-  { id: 'hoover', label: 'Barbara E. Hoover Act', law: '63 O.S. § 1-1956.1' },
-  { id: 'oac677', label: 'OAC 310:677 Nurse Aide Training', law: 'OAC 310:677' },
-  { id: 'alz', label: "Alzheimer's / Dementia Disclosure", law: '63 O.S. § 1-879.2a + OAC 310:673' },
-  { id: 'nhca', label: 'Nursing Home Care Act', law: '63 O.S. § 1-1900.1' },
-  { id: 'oac675', label: 'OAC 310:675 Nursing Facilities', law: 'OAC 310:675' },
-  { id: 'continuum', label: 'Continuum of Care / Assisted Living', law: '63 O.S. § 1-890.1 + OAC 310:663' },
-  { id: 'residential', label: 'Residential Care', law: '63 O.S. § 1-819.1 + OAC 310:680' },
-  { id: 'adultday', label: 'Adult Day Care', law: '63 O.S. § 1-870 + OAC 310:605' },
+  { id: 'ltcala',      label: 'LTC Administrator Licensing Act',      law: '63 O.S. § 1-1949.1',              pages: [2, 30] },
+  { id: 'oac679',      label: 'OAC 310:679 LTC Administrators',       law: 'OAC 310:679',                     pages: [31, 60] },
+  { id: 'pharmacy',    label: 'Pharmacy',                              law: '59 O.S. § 367.3',                 pages: [61, 80] },
+  { id: 'hoover',      label: 'Barbara E. Hoover Act',                law: '63 O.S. § 1-1956.1',              pages: [81, 110] },
+  { id: 'oac677',      label: 'OAC 310:677 Nurse Aide Training',      law: 'OAC 310:677',                     pages: [111, 150] },
+  { id: 'alz',         label: "Alzheimer's / Dementia Disclosure",    law: '63 O.S. § 1-879.2a + OAC 310:673',pages: [151, 190] },
+  { id: 'nhca',        label: 'Nursing Home Care Act',                 law: '63 O.S. § 1-1900.1',              pages: [191, 250] },
+  { id: 'oac675',      label: 'OAC 310:675 Nursing Facilities',       law: 'OAC 310:675',                     pages: [251, 330] },
+  { id: 'continuum',   label: 'Continuum of Care / Assisted Living',  law: '63 O.S. § 1-890.1 + OAC 310:663',pages: [331, 375] },
+  { id: 'residential', label: 'Residential Care',                     law: '63 O.S. § 1-819.1 + OAC 310:680',pages: [376, 415] },
+  { id: 'adultday',    label: 'Adult Day Care',                       law: '63 O.S. § 1-870 + OAC 310:605',  pages: [416, 445] },
 ];
 
 const st = {
@@ -511,16 +512,45 @@ function loadFile(file) {
 
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
+async function extractPages(b64, pageRanges) {
+  const { PDFDocument } = PDFLib;
+  const srcBytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  const srcDoc = await PDFDocument.load(srcBytes, { ignoreEncryption: true });
+  const totalPages = srcDoc.getPageCount();
+
+  // Collect unique 0-based page indices from all selected sections
+  const pageSet = new Set();
+  for (const [start, end] of pageRanges) {
+    for (let p = start - 1; p < Math.min(end, totalPages); p++) {
+      pageSet.add(p);
+    }
+  }
+  const pageIndices = [...pageSet].sort((a, b) => a - b);
+
+  const newDoc = await PDFDocument.create();
+  const copied = await newDoc.copyPages(srcDoc, pageIndices);
+  copied.forEach(p => newDoc.addPage(p));
+
+  const newBytes = await newDoc.save();
+  const binary = newBytes.reduce((acc, byte) => acc + String.fromCharCode(byte), '');
+  return btoa(binary);
+}
+
 async function startQuiz() {
   if (!st.b64 || !st.selectedSections.length) return;
   st.view = 'loading'; st.error = ''; render();
 
-  const selInfo = st.selectedSections.map(id => {
-    const s = SECTIONS.find(x => x.id === id);
-    return `- ${s.label} (${s.law})`;
-  }).join('\n');
+  try {
+    // Extract only the pages for selected sections
+    const pageRanges = st.selectedSections.map(id => SECTIONS.find(s => s.id === id).pages);
+    const slicedB64 = await extractPages(st.b64, pageRanges);
 
-  const prompt = `You are an Oklahoma Long-Term Care Administrator (NHA) state licensing exam coach.
+    const selInfo = st.selectedSections.map(id => {
+      const s = SECTIONS.find(x => x.id === id);
+      return `- ${s.label} (${s.law})`;
+    }).join('\n');
+
+    const prompt = `You are an Oklahoma Long-Term Care Administrator (NHA) state licensing exam coach.
 
 The student is studying for the Oklahoma State Standards exam. Questions on this exam are taken DIRECTLY from Oklahoma rule and law.
 
@@ -553,20 +583,16 @@ Return ONLY valid JSON — no markdown, no preamble:
 
 Return up to ${st.qCount} questions. Prioritize extracting real exam questions first, then generate from the content. Make distractors plausible — avoid obviously wrong answers.`;
 
-  try {
     const resp = await fetch(st.workerUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': st.apiKey,
-      },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': st.apiKey },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 4000,
         messages: [{
           role: 'user',
           content: [
-            { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: st.b64 } },
+            { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: slicedB64 } },
             { type: 'text', text: prompt }
           ]
         }]
