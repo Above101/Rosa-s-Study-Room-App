@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rosa's Study Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --surface-alt: #F0EEE8;
+    --border: #DDD9D0;
+    --border-strong: #C4BFB4;
+    --text: #1A1916;
+    --text-2: #5C5A54;
+    --text-3: #9C9A94;
+    --accent: #1B4F8A;
+    --accent-bg: #EBF0F8;
+    --accent-border: #A8C0DC;
+    --success: #1A6640;
+    --success-bg: #EAF4EE;
+    --success-border: #A0CCAF;
+    --danger: #8A1B1B;
+    --danger-bg: #F8EBEB;
+    --danger-border: #DCA8A8;
+    --warn-bg: #FBF5E6;
+    --warn-border: #DFC98A;
+    --warn-text: #6B4F0A;
+    --pro-bg: #F0EBF8;
+    --pro-border: #C0A8DC;
+    --pro-text: #4A1B8A;
+    --radius: 6px;
+    --radius-lg: 10px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .header {
+    background: var(--accent);
+    color: white;
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-brand {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-brand span {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    background: rgba(255,255,255,0.18);
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .header-score {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 500;
+  }
+
+  /* Layout */
+  .main { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* API key screen */
+  .key-screen { max-width: 440px; margin: 4rem auto; }
+  .key-screen h1 { font-family: 'Lora', serif; font-size: 24px; font-weight: 500; margin-bottom: 0.5rem; }
+  .key-screen p { color: var(--text-2); font-size: 14px; margin-bottom: 1.5rem; line-height: 1.65; }
+  .key-input-wrap { display: flex; gap: 8px; }
+  .key-input-wrap input { flex: 1; padding: 10px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 14px; background: var(--surface); color: var(--text); font-family: 'Inter', sans-serif; }
+  .key-input-wrap input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(27,79,138,0.12); }
+  .key-note { font-size: 12px; color: var(--text-3); margin-top: 10px; }
+  .key-note a { color: var(--accent); text-decoration: none; }
+
+  /* Upload screen */
+  .screen-title { font-family: 'Lora', serif; font-size: 22px; font-weight: 500; margin-bottom: 0.4rem; }
+  .screen-sub { color: var(--text-2); font-size: 14px; margin-bottom: 1.75rem; }
+
+  .upload-zone { border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg); padding: 2.5rem 2rem; text-align: center; cursor: pointer; transition: background 0.15s, border-color 0.15s; background: var(--surface); }
+  .upload-zone:hover { background: var(--accent-bg); border-color: var(--accent-border); }
+  .upload-zone input { display: none; }
+  .upload-icon { font-size: 36px; margin-bottom: 0.75rem; }
+  .upload-label { font-size: 15px; color: var(--text-2); }
+  .upload-label strong { color: var(--text); font-weight: 600; }
+  .upload-hint { font-size: 12px; color: var(--text-3); margin-top: 5px; }
+
+  .file-success { display: flex; align-items: center; gap: 10px; background: var(--success-bg); border: 1px solid var(--success-border); border-radius: var(--radius); padding: 10px 14px; font-size: 14px; color: var(--success); margin-bottom: 1.5rem; }
+  .file-success button { margin-left: auto; font-size: 12px; color: var(--text-3); background: none; border: none; cursor: pointer; }
+
+  /* Sections */
+  .section-label { font-size: 12px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.75rem; margin-top: 1.5rem; }
+  .section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
+  @media (max-width: 520px) { .section-grid { grid-template-columns: 1fr; } }
+  .sec-btn { padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text-2); font-size: 12px; cursor: pointer; text-align: left; line-height: 1.45; font-family: 'Inter', sans-serif; transition: all 0.1s; }
+  .sec-btn:hover { border-color: var(--accent-border); color: var(--text); }
+  .sec-btn.active { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+  .sec-cite { font-size: 10px; display: block; margin-bottom: 2px; font-weight: 600; letter-spacing: 0.04em; opacity: 0.7; }
+  .sec-actions { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+
+  /* Controls row */
+  .controls-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 1.25rem; margin-top: 0.5rem; }
+  .controls-left { display: flex; align-items: center; gap: 10px; }
+  .field-label { font-size: 13px; color: var(--text-2); }
+  select.pick { font-size: 13px; padding: 7px 10px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); font-family: 'Inter', sans-serif; cursor: pointer; }
+
+  /* Buttons */
+  .btn { padding: 9px 20px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: 14px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500; transition: background 0.1s; }
+  .btn:hover { background: var(--surface-alt); }
+  .btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .btn-primary:hover { background: #163F70; border-color: #163F70; }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
+
+  /* Loading */
+  .loading { text-align: center; padding: 4rem 1rem; }
+  .spinner { width: 32px; height: 32px; border: 2.5px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.75s linear infinite; margin: 0 auto 1.25rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading p { color: var(--text-2); font-size: 14px; }
+  .loading small { color: var(--text-3); font-size: 12px; display: block; margin-top: 4px; }
+
+  /* Quiz */
+  .progress-wrap { margin-bottom: 1.5rem; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-3); margin-bottom: 6px; }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.35s ease; }
+
+  .q-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; margin-bottom: 1rem; }
+  .q-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
+  .tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .tag-ex { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-border); }
+  .tag-gen { background: var(--pro-bg); color: var(--pro-text); border: 1px solid var(--pro-border); }
+  .q-section { font-size: 12px; color: var(--text-3); }
+  .q-text { font-size: 16px; font-weight: 500; line-height: 1.6; color: var(--text); margin-bottom: 1.25rem; }
+
+  .option { display: flex; align-items: flex-start; gap: 12px; padding: 11px 14px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; cursor: pointer; transition: background 0.1s, border-color 0.1s; }
+  .option:hover:not(.locked) { border-color: var(--accent-border); background: var(--accent-bg); }
+  .option.selected { border-color: var(--accent); background: var(--accent-bg); }
+  .option.correct { border-color: var(--success-border); background: var(--success-bg); }
+  .option.wrong { border-color: var(--danger-border); background: var(--danger-bg); }
+  .option.locked { cursor: default; }
+  .option-letter { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; color: var(--text-3); }
+  .option.selected .option-letter { background: var(--accent); color: white; border-color: var(--accent); }
+  .option.correct .option-letter { background: var(--success); color: white; border-color: var(--success); }
+  .option.wrong .option-letter { background: var(--danger); color: white; border-color: var(--danger); }
+  .option-text { font-size: 14px; color: var(--text); line-height: 1.5; padding-top: 3px; }
+
+  .feedback { border-radius: var(--radius); padding: 12px 16px; font-size: 14px; line-height: 1.6; margin-top: 1rem; }
+  .feedback.correct { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+  .feedback.wrong { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
+  .feedback strong { font-weight: 600; }
+  .feedback-cite { font-size: 11px; margin-top: 6px; opacity: 0.75; font-style: italic; }
+
+  .nav-row { display: flex; align-items: center; justify-content: space-between; }
+  .nav-left { font-size: 12px; color: var(--text-3); }
+
+  /* Results */
+  .results-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem 2rem; text-align: center; }
+  .score-pct { font-family: 'Lora', serif; font-size: 64px; font-weight: 600; color: var(--accent); line-height: 1; }
+  .score-sub { font-size: 14px; color: var(--text-2); margin-top: 6px; margin-bottom: 1.75rem; }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+  .stat { background: var(--bg); border-radius: var(--radius); padding: 14px; }
+  .stat-n { font-size: 24px; font-weight: 600; color: var(--text); }
+  .stat-l { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+  .review-box { background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: var(--radius); padding: 12px 16px; text-align: left; margin-bottom: 1.5rem; }
+  .review-title { font-size: 12px; font-weight: 600; color: var(--warn-text); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .review-items { font-size: 13px; color: var(--warn-text); }
+  .results-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  /* Error */
+  .error-box { background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: var(--radius); padding: 14px 16px; font-size: 13px; color: var(--danger); margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    Rosa's Study Room <span>Oklahoma NHA</span>
+  </div>
+  <div class="header-score" id="header-score"></div>
+</header>
+
+<main class="main">
+  <div id="app"></div>
+</main>
+
+<script>
+const SECTIONS = [
+  { id: 'ltcala', label: 'LTC Administrator Licensing Act', law: '63 O.S. § 1-1949.1' },
+  { id: 'oac679', label: 'OAC 310:679 LTC Administrators', law: 'OAC 310:679' },
+  { id: 'pharmacy', label: 'Pharmacy', law: '59 O.S. § 367.3' },
+  { id: 'hoover', label: 'Barbara E. Hoover Act', law: '63 O.S. § 1-1956.1' },
+  { id: 'oac677', label: 'OAC 310:677 Nurse Aide Training', law: 'OAC 310:677' },
+  { id: 'alz', label: "Alzheimer's / Dementia Disclosure", law: '63 O.S. § 1-879.2a + OAC 310:673' },
+  { id: 'nhca', label: 'Nursing Home Care Act', law: '63 O.S. § 1-1900.1' },
+  { id: 'oac675', label: 'OAC 310:675 Nursing Facilities', law: 'OAC 310:675' },
+  { id: 'continuum', label: 'Continuum of Care / Assisted Living', law: '63 O.S. § 1-890.1 + OAC 310:663' },
+  { id: 'residential', label: 'Residential Care', law: '63 O.S. § 1-819.1 + OAC 310:680' },
+  { id: 'adultday', label: 'Adult Day Care', law: '63 O.S. § 1-870 + OAC 310:605' },
+];
+
+const st = {
+  view: 'apikey',
+  apiKey: '',
+  b64: null,
+  fileName: '',
+  selectedSections: SECTIONS.map(s => s.id),
+  qCount: 10,
+  questions: [],
+  cur: 0,
+  sel: null,
+  answered: false,
+  score: 0,
+  wrong: [],
+  error: '',
+};
+
+function render() {
+  const app = document.getElementById('app');
+  const score = document.getElementById('header-score');
+  if (st.view === 'quiz' && st.questions.length) {
+    const done = st.cur + (st.answered ? 1 : 0);
+    score.textContent = done > 0 ? `${st.score} / ${done}` : '';
+  } else { score.textContent = ''; }
+
+  if (st.view === 'apikey') app.innerHTML = apikeyView();
+  else if (st.view === 'upload') app.innerHTML = uploadView();
+  else if (st.view === 'loading') app.innerHTML = loadingView();
+  else if (st.view === 'quiz') app.innerHTML = quizView();
+  else if (st.view === 'results') app.innerHTML = resultsView();
+  bind();
+}
+
+function apikeyView() {
+  return `<div class="key-screen">
+    <div style="font-size:32px;margin-bottom:1rem">📋</div>
+    <h1>Rosa's Study Room</h1>
+    <p>Enter your Anthropic API key to get started. Your key is stored only in this browser session and never sent anywhere except Anthropic's API.</p>
+    <div class="key-input-wrap">
+      <input type="password" id="api-key-input" placeholder="sk-ant-..." value="${st.apiKey}" />
+      <button class="btn btn-primary" id="key-submit">Continue</button>
+    </div>
+    <p class="key-note">Get a free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> — free tier is sufficient for studying.</p>
+  </div>`;
+}
+
+function uploadView() {
+  const fileHtml = st.b64
+    ? `<div class="file-success">
+        <span>📄</span>
+        <span>${st.fileName}</span>
+        <button onclick="clearFile()">Change</button>
+       </div>`
+    : `<label class="upload-zone" id="upload-zone">
+        <input type="file" id="file-input" accept="application/pdf">
+        <div class="upload-icon">📑</div>
+        <div class="upload-label"><strong>Upload your study guide PDF</strong></div>
+        <div class="upload-hint">LTCALP_state_study_guide_8-20-24.pdf or any PDF</div>
+       </label>`;
+
+  const secBtns = SECTIONS.map(s => {
+    const active = st.selectedSections.includes(s.id) ? ' active' : '';
+    return `<button class="sec-btn${active}" data-sec="${s.id}">
+      <span class="sec-cite">${s.law}</span>${s.label}
+    </button>`;
+  }).join('');
+
+  const canStart = st.b64 && st.selectedSections.length > 0;
+  const selCount = st.selectedSections.length;
+
+  return `
+    <p class="screen-title">Build your quiz</p>
+    <p class="screen-sub">Upload your study guide PDF, then choose which Oklahoma statutes and OAC rules to quiz on.</p>
+    ${fileHtml}
+    <p class="section-label">Sections — ${selCount} selected</p>
+    <div class="section-grid">${secBtns}</div>
+    <div class="sec-actions">
+      <button class="btn btn-sm" id="select-all">Select all</button>
+      <button class="btn btn-sm" id="clear-all">Clear all</button>
+    </div>
+    <div class="controls-row">
+      <div class="controls-left">
+        <span class="field-label">Questions:</span>
+        <select class="pick" id="q-count">
+          <option value="5">5</option>
+          <option value="10" ${st.qCount==10?'selected':''}>10</option>
+          <option value="15" ${st.qCount==15?'selected':''}>15</option>
+          <option value="20" ${st.qCount==20?'selected':''}>20</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="start-btn" ${canStart ? '' : 'disabled'}>Start quiz →</button>
+    </div>
+    ${st.error ? `<div class="error-box">${st.error}</div>` : ''}`;
+}
+
+function loadingView() {
+  const names = st.selectedSections.map(id => SECTIONS.find(s => s.id === id)?.label).join(', ');
+  return `<div class="loading">
+    <div class="spinner"></div>
+    <p>Reading your PDF and generating questions…</p>
+    <small>${names}</small>
+    <small style="margin-top:8px">This can take 30–60 seconds for large PDFs</small>
+  </div>`;
+}
+
+function quizView() {
+  const q = st.questions[st.cur];
+  const total = st.questions.length;
+  const pct = Math.round(st.cur / total * 100);
+  const L = ['A','B','C','D'];
+
+  const opts = q.options.map((opt, i) => {
+    let cls = 'option';
+    if (st.answered) {
+      cls += ' locked';
+      if (i === q.correct) cls += ' correct';
+      else if (i === st.sel) cls += ' wrong';
+    } else if (i === st.sel) cls += ' selected';
+    return `<div class="${cls}" data-i="${i}">
+      <div class="option-letter">${L[i]}</div>
+      <div class="option-text">${opt}</div>
+    </div>`;
+  }).join('');
+
+  let feedback = '';
+  if (st.answered) {
+    const ok = st.sel === q.correct;
+    feedback = `<div class="feedback ${ok ? 'correct' : 'wrong'}">
+      <strong>${ok ? 'Correct.' : 'Incorrect.'}</strong> ${q.explanation}
+      ${q.cite ? `<div class="feedback-cite">${q.cite}</div>` : ''}
+    </div>`;
+  }
+
+  return `
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span>Question ${st.cur+1} of ${total}</span>
+        <span>${st.selectedSections.length} section${st.selectedSections.length!==1?'s':''}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="q-card">
+      <div class="q-meta">
+        <span class="tag ${q.type==='extracted'?'tag-ex':'tag-gen'}">${q.type==='extracted'?'Exam question':'Generated'}</span>
+        ${q.section ? `<span class="q-section">${q.section}</span>` : ''}
+      </div>
+      <div class="q-text">${q.question}</div>
+      ${opts}
+      ${feedback}
+    </div>
+    <div class="nav-row">
+      <div class="nav-left">${st.fileName}</div>
+      ${st.answered
+        ? `<button class="btn btn-primary" id="next-btn">${st.cur+1 < total ? 'Next question →' : 'See results →'}</button>`
+        : `<button class="btn btn-primary" id="submit-btn" ${st.sel===null?'disabled':''}>Check answer</button>`}
+    </div>`;
+}
+
+function resultsView() {
+  const total = st.questions.length;
+  const pct = Math.round(st.score / total * 100);
+  const msg = pct >= 90 ? 'Outstanding' : pct >= 75 ? 'Good progress' : pct >= 60 ? 'Keep at it' : 'More study needed';
+  const missed = [...new Set(st.wrong.map(q => q.section).filter(Boolean))].slice(0, 5);
+
+  return `<div class="results-card">
+    <div class="score-pct">${pct}%</div>
+    <div class="score-sub">${msg} — ${st.score} of ${total} correct</div>
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-n">${st.score}</div><div class="stat-l">Correct</div></div>
+      <div class="stat"><div class="stat-n">${total - st.score}</div><div class="stat-l">Missed</div></div>
+      <div class="stat"><div class="stat-n">${st.questions.filter(q=>q.type==='extracted').length}</div><div class="stat-l">Exam questions</div></div>
+    </div>
+    ${missed.length ? `<div class="review-box">
+      <div class="review-title">Sections to review</div>
+      <div class="review-items">${missed.join(' · ')}</div>
+    </div>` : ''}
+    <div class="results-actions">
+      <button class="btn btn-primary" id="retry-btn">Retake quiz</button>
+      <button class="btn" id="change-btn">Change sections</button>
+      <button class="btn" id="new-pdf-btn">New PDF</button>
+    </div>
+  </div>`;
+}
+
+function bind() {
+  // API key
+  const keyInput = document.getElementById('api-key-input');
+  const keySubmit = document.getElementById('key-submit');
+  if (keyInput) keyInput.onkeydown = e => { if (e.key === 'Enter') submitKey(); };
+  if (keySubmit) keySubmit.onclick = submitKey;
+
+  // File upload
+  const fi = document.getElementById('file-input');
+  if (fi) fi.onchange = e => loadFile(e.target.files[0]);
+  const uz = document.getElementById('upload-zone');
+  if (uz) {
+    uz.ondragover = e => { e.preventDefault(); uz.style.borderColor = 'var(--accent)'; };
+    uz.ondragleave = () => { uz.style.borderColor = ''; };
+    uz.ondrop = e => { e.preventDefault(); loadFile(e.dataTransfer.files[0]); };
+  }
+
+  // Sections
+  document.querySelectorAll('.sec-btn').forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.dataset.sec;
+      const idx = st.selectedSections.indexOf(id);
+      if (idx >= 0) st.selectedSections.splice(idx, 1);
+      else st.selectedSections.push(id);
+      render();
+    };
+  });
+  const sa = document.getElementById('select-all');
+  if (sa) sa.onclick = () => { st.selectedSections = SECTIONS.map(s => s.id); render(); };
+  const ca = document.getElementById('clear-all');
+  if (ca) ca.onclick = () => { st.selectedSections = []; render(); };
+
+  // Q count
+  const qc = document.getElementById('q-count');
+  if (qc) qc.onchange = e => { st.qCount = parseInt(e.target.value); };
+
+  // Start
+  const startBtn = document.getElementById('start-btn');
+  if (startBtn) startBtn.onclick = startQuiz;
+
+  // Options
+  document.querySelectorAll('.option[data-i]').forEach(opt => {
+    opt.onclick = () => { if (!st.answered) { st.sel = parseInt(opt.dataset.i); render(); } };
+  });
+
+  // Submit / Next
+  const sub = document.getElementById('submit-btn');
+  if (sub) sub.onclick = () => {
+    st.answered = true;
+    if (st.sel === st.questions[st.cur].correct) st.score++;
+    else st.wrong.push(st.questions[st.cur]);
+    render();
+  };
+  const nxt = document.getElementById('next-btn');
+  if (nxt) nxt.onclick = () => {
+    st.cur++; st.sel = null; st.answered = false;
+    if (st.cur >= st.questions.length) st.view = 'results';
+    render();
+  };
+
+  // Results
+  const retry = document.getElementById('retry-btn');
+  if (retry) retry.onclick = () => {
+    st.cur=0; st.score=0; st.sel=null; st.answered=false; st.wrong=[];
+    st.questions = shuffle(st.questions); st.view='quiz'; render();
+  };
+  const change = document.getElementById('change-btn');
+  if (change) change.onclick = () => { st.view='upload'; st.error=''; render(); };
+  const newpdf = document.getElementById('new-pdf-btn');
+  if (newpdf) newpdf.onclick = () => {
+    st.b64=null; st.fileName=''; st.view='upload'; st.error=''; render();
+  };
+}
+
+function submitKey() {
+  const val = document.getElementById('api-key-input')?.value?.trim();
+  if (val && val.startsWith('sk-')) { st.apiKey = val; st.view = 'upload'; render(); }
+  else { alert('Please enter a valid Anthropic API key starting with sk-ant-'); }
+}
+
+function clearFile() { st.b64 = null; st.fileName = ''; render(); }
+
+function loadFile(file) {
+  if (!file || file.type !== 'application/pdf') return;
+  st.fileName = file.name;
+  const r = new FileReader();
+  r.onload = e => { st.b64 = e.target.result.split(',')[1]; render(); };
+  r.readAsDataURL(file);
+}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+async function startQuiz() {
+  if (!st.b64 || !st.selectedSections.length) return;
+  st.view = 'loading'; st.error = ''; render();
+
+  const selInfo = st.selectedSections.map(id => {
+    const s = SECTIONS.find(x => x.id === id);
+    return `- ${s.label} (${s.law})`;
+  }).join('\n');
+
+  const prompt = `You are an Oklahoma Long-Term Care Administrator (NHA) state licensing exam coach.
+
+The student is studying for the Oklahoma State Standards exam. Questions on this exam are taken DIRECTLY from Oklahoma rule and law.
+
+Focus ONLY on these sections from the study guide:
+${selInfo}
+
+Your task:
+1. EXTRACT any multiple choice questions already in the document (type: "extracted")
+2. GENERATE new multiple choice questions from the content in those sections (type: "generated")
+
+Generated questions MUST:
+- Be based on specific Oklahoma statutes, OAC rules, and administrative code in the selected sections
+- Test knowledge that would appear on the OK State Standards exam
+- Reference specific regulatory requirements (timeframes, thresholds, definitions, license types, penalties)
+
+Return ONLY valid JSON — no markdown, no preamble:
+{
+  "questions": [
+    {
+      "type": "extracted" or "generated",
+      "section": "short section name e.g. OAC 310:675",
+      "question": "question text",
+      "options": ["option A", "option B", "option C", "option D"],
+      "correct": 0,
+      "explanation": "1-2 sentence explanation of the correct answer",
+      "cite": "specific citation e.g. OAC 310:675-1-2(a) or 63 O.S. § 1-1900.3"
+    }
+  ]
+}
+
+Return up to ${st.qCount} questions. Prioritize extracting real exam questions first, then generate from the content. Make distractors plausible — avoid obviously wrong answers.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': st.apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-calls': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 4000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: st.b64 } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.error?.message || `API error ${resp.status}`);
+    }
+
+    const data = await resp.json();
+    const text = data.content.map(b => b.text || '').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    st.questions = shuffle(parsed.questions);
+    st.cur=0; st.score=0; st.sel=null; st.answered=false; st.wrong=[];
+    st.view = 'quiz';
+  } catch(err) {
+    st.view = 'upload';
+    st.error = `Could not generate questions: ${err.message}. Check your API key and try again.`;
+  }
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
