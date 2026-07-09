@@ -288,7 +288,7 @@ function uploadView() {
         <input type="file" id="file-input" accept="application/pdf">
         <div class="upload-icon">📑</div>
         <div class="upload-label"><strong>Upload your study guide PDF</strong></div>
-        <div class="upload-hint">LTCALP_state_study_guide_8-20-24.pdf or any PDF</div>
+        <div class="upload-hint">Upload a section PDF — e.g. 07_nhca_Nursing_Home_Care_Act.pdf</div>
        </label>`;
 
   const secBtns = SECTIONS.map(s => {
@@ -303,7 +303,7 @@ function uploadView() {
 
   return `
     <p class="screen-title">Build your quiz</p>
-    <p class="screen-sub">Upload your study guide PDF, then choose which Oklahoma statutes and OAC rules to quiz on.</p>
+    <p class="screen-sub">Upload one of the section PDFs, then pick which sections it covers to quiz on.</p>
     ${fileHtml}
     <p class="section-label">Sections — ${selCount} selected</p>
     <div class="section-grid">${secBtns}</div>
