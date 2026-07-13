@@ -156,8 +156,8 @@ const SECTIONS = [
 const st = {
   view: 'auth',   // auth | dashboard | loading | quiz | results
   authTab: 'signin',
-  workerUrl: localStorage.getItem('workerUrl') || '',
-  apiKey: localStorage.getItem('apiKey') || '',
+  workerUrl: 'https://withered-forest-c81f.wanazgambo.workers.dev/',
+  apiKey: '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',
   token: localStorage.getItem('token') || '',
   userId: localStorage.getItem('userId') || '',
   displayName: localStorage.getItem('displayName') || '',
@@ -221,17 +221,7 @@ function authView(){
     <div class="auth-verse">"I can do all things through Christ who strengthens me."</div>
     <div class="auth-ref">— Philippians 4:13</div>
 
-    ${!st.workerUrl ? `
-    <div class="field">
-      <label>Worker URL</label>
-      <input type="text" id="worker-input" placeholder="https://your-worker.workers.dev" value="${st.workerUrl}">
-    </div>
-    <div class="field">
-      <label>Anthropic API Key</label>
-      <input type="password" id="apikey-input" placeholder="sk-ant-..." value="${st.apiKey}">
-    </div>
-    <hr style="margin:1rem 0;border:none;border-top:1px solid var(--border)">
-    ` : ''}
+
 
     <div class="auth-tabs">
       <div class="auth-tab ${isIn?'active':''}" data-tab="signin">Sign In</div>
@@ -458,18 +448,7 @@ function bind(){
 // ── Auth ──────────────────────────────────────────────────────────────
 async function handleAuth(){
   st.error='';
-  // Save worker/apikey if shown
-  const wInput=document.getElementById('worker-input');
-  const akInput=document.getElementById('apikey-input');
-  if(wInput){
-    st.workerUrl=wInput.value.trim();
-    localStorage.setItem('workerUrl',st.workerUrl);
-  }
-  if(akInput){
-    st.apiKey=akInput.value.trim();
-    localStorage.setItem('apiKey',st.apiKey);
-  }
-  if(!st.workerUrl){st.error='Please enter your Worker URL first.';render();return;}
+
 
   const email=document.getElementById('auth-email')?.value?.trim();
   const password=document.getElementById('auth-password')?.value?.trim();
