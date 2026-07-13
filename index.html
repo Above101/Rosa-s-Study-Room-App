@@ -73,6 +73,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .sec-btn.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
 .sec-cite{font-size:10px;display:block;margin-bottom:2px;font-weight:600;letter-spacing:.04em;opacity:.7}
 .sec-actions{display:flex;gap:8px;margin-bottom:1.5rem}
+.dash-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.dash-tab{padding:9px 18px;font-size:13px;font-weight:500;color:var(--text-3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.dash-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.history-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px}
+.history-row:last-child{margin-bottom:0}
+.history-date{font-size:12px;color:var(--text-3)}
+.history-sections{font-size:12px;color:var(--text-2);margin-top:2px;max-width:380px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.history-pct{font-size:22px;font-weight:600}
+.history-detail{font-size:11px;color:var(--text-3);text-align:right;margin-top:1px}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--text-3);font-size:14px}
 .controls-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:1.25rem}
 .controls-left{display:flex;align-items:center;gap:10px}
 .field-label{font-size:13px;color:var(--text-2)}
@@ -162,6 +172,8 @@ const st = {
   userId: localStorage.getItem('userId') || '',
   displayName: localStorage.getItem('displayName') || '',
   progress: [],
+  sessions: [],
+  dashTab: 'study',
   selectedSections: SECTIONS.map(s => s.id),
   qCount: 10,
   questions: [],
@@ -241,6 +253,77 @@ function authView(){
 
 // ── Dashboard view ────────────────────────────────────────────────────
 function dashView(){
+  // ── History tab ──────────────────────────────────────────────────
+  if(st.dashTab==='history'){
+    const rows = st.sessions.length ? st.sessions.map(s=>{
+      const date = new Date(s.created_at);
+      const dateStr = date.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      const timeStr = date.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+      const secNames = (s.section_ids||[]).map(id=>SECTIONS.find(x=>x.id===id)?.label||id).join(', ');
+      const color = s.pct>=80?'var(--success)':s.pct>=60?'var(--accent)':'var(--danger)';
+      return `<div class="history-row">
+        <div>
+          <div class="history-date">${dateStr} at ${timeStr}</div>
+          <div class="history-sections">${secNames}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;margin-left:12px">
+          <div class="history-pct" style="color:${color}">${s.pct}%</div>
+          <div class="history-detail">${s.score}/${s.total} correct</div>
+        </div>
+      </div>`;
+    }).join('') : '<div class="empty-state">No quiz history yet.<br>Take your first quiz to see results here.</div>';
+
+    return `
+    <div class="dash-hello">Welcome back, ${st.displayName||'Studier'} 👋</div>
+    <div class="dash-sub">Oklahoma NHA State Standards Exam Prep</div>
+    <div class="dash-tabs">
+      <div class="dash-tab" data-dashtab="study">Study</div>
+      <div class="dash-tab active" data-dashtab="history">Quiz History</div>
+      <div class="dash-tab" data-dashtab="progress">Progress</div>
+    </div>
+    <div>${rows}</div>`;
+  }
+
+  // ── Progress tab ─────────────────────────────────────────────────
+  if(st.dashTab==='progress'){
+    const progCards = SECTIONS.map(s=>{
+      const p=st.progress.find(x=>x.section_id===s.id);
+      const pct=p?Math.round((p.correct_answers/Math.max(p.total_questions,1))*100):0;
+      const color=pct>=80?'#1A6640':pct>=60?'var(--accent)':'#8A1B1B';
+      return `<div class="prog-card">
+        <div class="prog-card-title">${s.label}</div>
+        <div class="prog-card-law">${s.law}</div>
+        <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        <div class="prog-card-stats">
+          <span class="prog-card-pct" style="color:${color}">${p?pct+'%':'—'}</span>
+          <span>${p?p.correct_answers+'/'+p.total_questions+' correct':''}</span>
+        </div>
+        ${p?`<div style="font-size:11px;color:var(--text-3);margin-top:4px">${p.sessions_taken} session${p.sessions_taken!==1?'s':''} · Last: ${new Date(p.last_taken).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>`:'<div style="font-size:11px;color:var(--text-3);margin-top:4px;font-style:italic">Not started</div>'}
+      </div>`;
+    }).join('');
+
+    const totalSessions=st.progress.reduce((a,p)=>a+p.sessions_taken,0);
+    const totalQ=st.progress.reduce((a,p)=>a+p.total_questions,0);
+    const totalCorrect=st.progress.reduce((a,p)=>a+p.correct_answers,0);
+    const overallPct=totalQ>0?Math.round((totalCorrect/totalQ)*100):0;
+
+    return `
+    <div class="dash-hello">Welcome back, ${st.displayName||'Studier'} 👋</div>
+    <div class="dash-sub">Oklahoma NHA State Standards Exam Prep</div>
+    <div class="dash-tabs">
+      <div class="dash-tab" data-dashtab="study">Study</div>
+      <div class="dash-tab" data-dashtab="history">Quiz History</div>
+      <div class="dash-tab active" data-dashtab="progress">Progress</div>
+    </div>
+    ${totalSessions>0?`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem">
+      <div class="stat"><div class="stat-n">${overallPct}%</div><div class="stat-l">Overall accuracy</div></div>
+      <div class="stat"><div class="stat-n">${totalSessions}</div><div class="stat-l">Sessions taken</div></div>
+      <div class="stat"><div class="stat-n">${totalQ}</div><div class="stat-l">Questions answered</div></div>
+    </div>`:''}
+    <div class="progress-grid">${progCards}</div>`;
+  }
+
+  // ── Study tab (default) ──────────────────────────────────────────
   const secBtns = SECTIONS.map(s=>{
     const active=st.selectedSections.includes(s.id)?'active':'';
     const prog=st.progress.find(p=>p.section_id===s.id);
@@ -287,7 +370,12 @@ function dashView(){
   <div class="progress-grid">${progCards}</div>
   <hr class="divider">`:''}
 
-  <div class="section-label">Start a Quiz — ${st.selectedSections.length} sections selected</div>
+  <div class="dash-tabs">
+    <div class="dash-tab active" data-dashtab="study">Study</div>
+    <div class="dash-tab" data-dashtab="history">Quiz History</div>
+    <div class="dash-tab" data-dashtab="progress">Progress</div>
+  </div>
+  <div class="section-label">Pick sections to quiz — ${st.selectedSections.length} selected</div>
   <div class="section-grid">${secBtns}</div>
   <div class="sec-actions">
     <button class="btn btn-sm" id="sel-all">Select all</button>
@@ -395,6 +483,11 @@ function bind(){
     render();
   };
 
+  // Dashboard tab switching
+  document.querySelectorAll('[data-dashtab]').forEach(el=>{
+    el.onclick=()=>{st.dashTab=el.dataset.dashtab;render()};
+  });
+
   // Section toggles
   document.querySelectorAll('.sec-btn').forEach(btn=>{
     btn.onclick=()=>{
@@ -430,7 +523,7 @@ function bind(){
   const nextBtn=document.getElementById('next-btn');
   if(nextBtn) nextBtn.onclick=()=>{
     st.cur++;st.sel=null;st.answered=false;
-    if(st.cur>=st.questions.length){st.view='results';saveSession();}
+    if(st.cur>=st.questions.length){st.view='results';render();saveSession();return;}
     render();
   };
   const retryBtn=document.getElementById('retry-btn');
@@ -483,13 +576,15 @@ async function handleAuth(){
 async function loadDashboard(){
   // Load profile + progress
   try{
-    const [prof, prog] = await Promise.all([
+    const [prof, prog, sess] = await Promise.all([
       api('get-profile'),
       api('get-progress'),
+      api('get-sessions'),
     ]);
     st.displayName=prof[0]?.display_name||'';
     localStorage.setItem('displayName',st.displayName);
     st.progress=Array.isArray(prog)?prog:[];
+    st.sessions=Array.isArray(sess)?sess:[];
   } catch(e){
     st.progress=[];
   }
@@ -590,8 +685,17 @@ async function saveSession(){
   } catch(e){
     st.saveStatus='Could not save progress — '+e.message;
   }
+  // Update save status text if results page is still showing
   const el=document.getElementById('save-status');
-  if(el)el.textContent=st.saveStatus;
+  if(el) el.textContent=st.saveStatus;
+  // Also refresh progress data for dashboard
+  if(st.view==='results'){
+    try{
+      const [prog, sess]=await Promise.all([api('get-progress'),api('get-sessions')]);
+      st.progress=Array.isArray(prog)?prog:[];
+      st.sessions=Array.isArray(sess)?sess:[];
+    } catch(e){}
+  }
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────
