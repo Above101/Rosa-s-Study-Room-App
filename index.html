@@ -21,7 +21,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .header-brand{font-family:'Lora',serif;font-size:16px;font-weight:500;color:white;display:flex;align-items:center;gap:10px}
 .header-brand span{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;background:rgba(255,255,255,.18);padding:2px 8px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase}
 .header-right{display:flex;align-items:center;gap:12px;font-size:13px;color:rgba(255,255,255,.8)}
-.header-score{font-weight:500}
+.streak-badge{background:rgba(255,255,255,.15);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500}
 .btn-logout{background:none;border:1px solid rgba(255,255,255,.3);color:white;padding:4px 12px;border-radius:var(--radius);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif}
 .btn-logout:hover{background:rgba(255,255,255,.1)}
 .main{max-width:740px;margin:0 auto;padding:2rem 1.5rem 4rem}
@@ -39,32 +39,55 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .auth-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .field{margin-bottom:12px}
 .field label{display:block;font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
-.field input{width:100%;padding:10px 14px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:14px;background:var(--surface);color:var(--text);font-family:'Inter',sans-serif}
-.field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(27,79,138,.1)}
-.btn{padding:9px 20px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:background .1s}
+.field input,.field select{width:100%;padding:10px 14px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:14px;background:var(--surface);color:var(--text);font-family:'Inter',sans-serif}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(27,79,138,.1)}
+.btn{padding:9px 20px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:all .1s}
 .btn:hover{background:var(--surface-alt)}
 .btn-primary{background:var(--accent);color:white;border-color:var(--accent);width:100%}
-.btn-primary:hover{background:#163F70;border-color:#163F70}
+.btn-primary:hover{background:#163F70}
 .btn-primary:disabled{opacity:.35;cursor:not-allowed}
-.btn-sm{padding:6px 14px;font-size:12px}
-.auth-switch{font-size:12px;color:var(--text-3);text-align:center;margin-top:12px}
-.auth-switch span{color:var(--accent);cursor:pointer;text-decoration:underline}
+.btn-sm{padding:6px 14px;font-size:12px;width:auto}
+.btn-danger{border-color:var(--danger-border);color:var(--danger)}
 .error-box{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--danger);margin-top:10px}
+.success-box{background:var(--success-bg);border:1px solid var(--success-border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--success);margin-top:10px}
 
-/* Dashboard */
-.dash-hello{font-family:'Lora',serif;font-size:22px;font-weight:500;margin-bottom:.35rem}
-.dash-sub{color:var(--text-2);font-size:14px;margin-bottom:1.75rem}
-.progress-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.75rem}
+/* Dashboard tabs */
+.dash-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1.5rem;overflow-x:auto}
+.dash-tab{padding:9px 16px;font-size:13px;font-weight:500;color:var(--text-3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.dash-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* Cards & stats */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px}
+.stat-n{font-size:24px;font-weight:600;color:var(--text)}
+.stat-l{font-size:12px;color:var(--text-3);margin-top:2px}
+
+/* Countdown banner */
+.countdown-banner{background:var(--accent);color:white;border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between}
+.countdown-days{font-size:32px;font-weight:600;line-height:1}
+.countdown-label{font-size:12px;opacity:.8;margin-top:2px}
+.countdown-right{font-size:13px;opacity:.85;text-align:right}
+
+/* Daily goal ring */
+.goal-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:flex;align-items:center;gap:16px;margin-bottom:1.5rem}
+.goal-ring{flex-shrink:0}
+.goal-text .goal-count{font-size:20px;font-weight:600;color:var(--text)}
+.goal-text .goal-sub{font-size:12px;color:var(--text-3)}
+
+/* Progress grid */
+.progress-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
 @media(max-width:520px){.progress-grid{grid-template-columns:1fr}}
-.prog-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px}
-.prog-card-title{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.prog-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;position:relative}
+.prog-card-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
 .prog-card-law{font-size:10px;color:var(--text-3);margin-bottom:8px}
-.prog-bar-wrap{height:5px;background:var(--border);border-radius:3px;margin-bottom:6px}
-.prog-bar-fill{height:100%;border-radius:3px;background:var(--accent);transition:width .4s ease}
-.prog-card-stats{display:flex;justify-content:space-between;font-size:11px;color:var(--text-3)}
-.prog-card-pct{font-size:16px;font-weight:600;color:var(--text)}
-.prog-card-new{font-size:11px;color:var(--text-3);font-style:italic}
-.divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+.prog-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:6px}
+.prog-bar-fill{height:100%;border-radius:2px;transition:width .4s ease}
+.prog-card-stats{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text-3)}
+.prog-card-pct{font-size:18px;font-weight:600}
+.ready-badge{position:absolute;top:10px;right:10px;font-size:11px;background:var(--success-bg);color:var(--success);border:1px solid var(--success-border);padding:2px 7px;border-radius:20px;font-weight:600}
+.sparkline{display:block;margin-top:6px}
+
+/* Section picker */
 .section-label{font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem}
 .section-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
 @media(max-width:520px){.section-grid{grid-template-columns:1fr}}
@@ -73,37 +96,40 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .sec-btn.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
 .sec-cite{font-size:10px;display:block;margin-bottom:2px;font-weight:600;letter-spacing:.04em;opacity:.7}
 .sec-actions{display:flex;gap:8px;margin-bottom:1.5rem}
-.dash-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
-.dash-tab{padding:9px 18px;font-size:13px;font-weight:500;color:var(--text-3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
-.dash-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.history-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px}
-.history-row:last-child{margin-bottom:0}
-.history-date{font-size:12px;color:var(--text-3)}
-.history-sections{font-size:12px;color:var(--text-2);margin-top:2px;max-width:380px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.history-pct{font-size:22px;font-weight:600}
-.history-detail{font-size:11px;color:var(--text-3);text-align:right;margin-top:1px}
-.empty-state{text-align:center;padding:3rem 1rem;color:var(--text-3);font-size:14px}
 .controls-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:1.25rem}
-.controls-left{display:flex;align-items:center;gap:10px}
+.controls-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .field-label{font-size:13px;color:var(--text-2)}
 select.pick{font-size:13px;padding:7px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface);color:var(--text);font-family:'Inter',sans-serif;cursor:pointer}
+.toggle-wrap{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-2)}
+.toggle{position:relative;display:inline-block;width:36px;height:20px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--border-strong);border-radius:20px;transition:.2s}
+.toggle-slider:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.2s}
+.toggle input:checked+.toggle-slider{background:var(--accent)}
+.toggle input:checked+.toggle-slider:before{transform:translateX(16px)}
 
-/* Quiz */
+/* Loading */
 .loading{text-align:center;padding:4rem 1rem}
 .spinner{width:32px;height:32px;border:2.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 1.25rem}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading p{color:var(--text-2);font-size:14px}
 .loading small{color:var(--text-3);font-size:12px;display:block;margin-top:4px}
-.progress-wrap{margin-bottom:1.5rem}
+
+/* Quiz */
+.timer-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:1rem;overflow:hidden}
+.timer-bar{height:100%;background:var(--accent);border-radius:2px;transition:width 1s linear}
+.progress-wrap{margin-bottom:.75rem}
 .progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-3);margin-bottom:6px}
 .progress-bar{height:3px;background:var(--border);border-radius:2px}
 .progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .35s ease}
 .q-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem;margin-bottom:1rem}
-.q-meta{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
+.q-meta{display:flex;align-items:center;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
 .tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;letter-spacing:.05em;text-transform:uppercase}
 .tag-ex{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-border)}
 .tag-gen{background:#F0EBF8;color:#4A1B8A;border:1px solid #C0A8DC}
 .q-section{font-size:12px;color:var(--text-3)}
+.bookmark-btn{margin-left:auto;background:none;border:none;cursor:pointer;font-size:16px;color:var(--text-3);padding:2px 4px;line-height:1}
+.bookmark-btn.active{color:#F5A623}
 .q-text{font-size:16px;font-weight:500;line-height:1.6;color:var(--text);margin-bottom:1.25rem}
 .option{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:background .1s,border-color .1s}
 .option:hover:not(.locked){border-color:var(--accent-border);background:var(--accent-bg)}
@@ -124,74 +150,159 @@ select.pick{font-size:13px;padding:7px 10px;border:1px solid var(--border-strong
 
 /* Results */
 .results-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2.5rem 2rem;text-align:center}
-.score-pct{font-family:'Lora',serif;font-size:64px;font-weight:600;color:var(--accent);line-height:1}
-.score-sub{font-size:14px;color:var(--text-2);margin-top:6px;margin-bottom:1.75rem}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem}
-.stat{background:var(--bg);border-radius:var(--radius);padding:14px}
-.stat-n{font-size:24px;font-weight:600;color:var(--text)}
-.stat-l{font-size:12px;color:var(--text-3);margin-top:2px}
+.score-pct{font-family:'Lora',serif;font-size:64px;font-weight:600;line-height:1}
+.score-sub{font-size:14px;color:var(--text-2);margin-top:6px;margin-bottom:1rem}
+.encourage-msg{font-size:14px;font-style:italic;color:var(--text-2);margin-bottom:1.5rem;line-height:1.6;padding:0 1rem}
+.results-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem}
 .review-box{background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:var(--radius);padding:12px 16px;text-align:left;margin-bottom:1.5rem}
 .review-title{font-size:12px;font-weight:600;color:var(--warn-text);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-.review-items{font-size:13px;color:var(--warn-text)}
 .results-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.save-status{font-size:12px;color:var(--text-3);margin-top:10px;text-align:center}
+.save-status{font-size:12px;color:var(--text-3);margin-top:12px}
+
+/* Badges */
+.badges-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text-2)}
+.badge.earned{border-color:#F5A623;background:#FFF8EC;color:#7B4F00;font-weight:500}
+.badge-icon{font-size:16px}
+
+/* History */
+.history-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px}
+.history-date{font-size:12px;color:var(--text-3)}
+.history-sections{font-size:12px;color:var(--text-2);margin-top:2px;max-width:360px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.history-pct{font-size:22px;font-weight:600;text-align:right}
+.history-detail{font-size:11px;color:var(--text-3);text-align:right;margin-top:1px}
+
+/* Bookmarks */
+.bookmark-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px}
+.bookmark-q{font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px}
+.bookmark-section{font-size:11px;color:var(--text-3);margin-bottom:8px}
+.bookmark-actions{display:flex;gap:8px}
+
+/* Settings */
+.settings-section{margin-bottom:1.5rem}
+.settings-title{font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem}
+
+/* Weekly summary */
+.weekly-box{background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:var(--radius-lg);padding:16px;margin-bottom:1.5rem}
+.weekly-title{font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.weekly-stats{display:flex;gap:24px;font-size:13px;color:var(--text-2)}
+.weekly-stats strong{color:var(--text);font-weight:600}
+
+/* Celebration overlay */
+.celebration{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:999;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.celebration-card{background:white;border-radius:var(--radius-lg);padding:2.5rem;text-align:center;max-width:320px;animation:popIn .4s}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.celebration-icon{font-size:56px;margin-bottom:.75rem}
+.celebration-title{font-family:'Lora',serif;font-size:20px;font-weight:600;margin-bottom:.5rem}
+.celebration-sub{font-size:14px;color:var(--text-2);margin-bottom:1.5rem;line-height:1.5}
+
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--text-3);font-size:14px}
+.divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
 </style>
 </head>
 <body>
 <header class="header">
   <div class="header-brand">Rosa's Study Room <span>Oklahoma NHA</span></div>
   <div class="header-right">
-    <span class="header-score" id="header-score"></span>
-    <span id="header-name" style="opacity:.75"></span>
-    <button class="btn-logout" id="logout-btn" style="display:none">Sign out</button>
+    <span id="header-streak" class="streak-badge" style="display:none"></span>
+    <span id="header-score" style="font-weight:500"></span>
+    <button class="btn-logout" id="logout-btn" style="display:none" onclick="logout()">Sign out</button>
   </div>
 </header>
 <main class="main"><div id="app"></div></main>
+<div id="celebration" class="celebration" style="display:none" onclick="closeCelebration()">
+  <div class="celebration-card" onclick="event.stopPropagation()">
+    <div class="celebration-icon" id="cel-icon"></div>
+    <div class="celebration-title" id="cel-title"></div>
+    <div class="celebration-sub" id="cel-sub"></div>
+    <button class="btn btn-primary" onclick="closeCelebration()" style="width:auto;padding:9px 28px">Awesome! 🎉</button>
+  </div>
+</div>
 
 <script>
+// ── Config (hardcoded — users never see these) ──────────────────────
+const WORKER_URL = 'https://withered-forest-c81f.wanazgambo.workers.dev/';
+const API_KEY    = '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';
+
 const SECTIONS = [
-  {id:'ltcala',     label:'LTC Administrator Licensing Act',     law:'63 O.S. § 1-1949.1',              file:'01_ltcala_LTC_Administrator_Licensing_Act.pdf'},
-  {id:'oac679',     label:'OAC 310:679 LTC Administrators',      law:'OAC 310:679',                     file:'02_oac679_OAC_310-679_LTC_Administrators.pdf'},
-  {id:'pharmacy',   label:'Pharmacy',                            law:'59 O.S. § 367.3',                 file:'03_pharmacy_Pharmacy.pdf'},
-  {id:'hoover',     label:'Barbara E. Hoover Act',               law:'63 O.S. § 1-1956.1',              file:'04_hoover_Barbara_Hoover_Act.pdf'},
-  {id:'oac677',     label:'OAC 310:677 Nurse Aide Training',     law:'OAC 310:677',                     file:'05_oac677_OAC_310-677_Nurse_Aide_Training.pdf'},
-  {id:'alz',        label:"Alzheimer's / Dementia Disclosure",   law:'63 O.S. § 1-879.2a + OAC 310:673',file:'06_alz_Alzheimers_Dementia_Disclosure.pdf'},
-  {id:'nhca',       label:'Nursing Home Care Act',                law:'63 O.S. § 1-1900.1',              file:'07_nhca_Nursing_Home_Care_Act.pdf'},
-  {id:'oac675',     label:'OAC 310:675 Nursing Facilities',      law:'OAC 310:675',                     file:'08_oac675_OAC_310-675_Nursing_Facilities.pdf'},
-  {id:'continuum',  label:'Continuum of Care / Assisted Living', law:'63 O.S. § 1-890.1 + OAC 310:663', file:'09_continuum_Continuum_of_Care_Assisted_Living.pdf'},
-  {id:'residential',label:'Residential Care',                    law:'63 O.S. § 1-819.1 + OAC 310:680', file:'10_residential_Residential_Care.pdf'},
-  {id:'adultday',   label:'Adult Day Care',                      law:'63 O.S. § 1-870 + OAC 310:605',   file:'11_adultday_Adult_Day_Care.pdf'},
+  {id:'ltcala',     label:'LTC Administrator Licensing Act',     law:'63 O.S. § 1-1949.1',               file:'01_ltcala_LTC_Administrator_Licensing_Act.pdf'},
+  {id:'oac679',     label:'OAC 310:679 LTC Administrators',      law:'OAC 310:679',                      file:'02_oac679_OAC_310-679_LTC_Administrators.pdf'},
+  {id:'pharmacy',   label:'Pharmacy',                            law:'59 O.S. § 367.3',                  file:'03_pharmacy_Pharmacy.pdf'},
+  {id:'hoover',     label:'Barbara E. Hoover Act',               law:'63 O.S. § 1-1956.1',               file:'04_hoover_Barbara_Hoover_Act.pdf'},
+  {id:'oac677',     label:'OAC 310:677 Nurse Aide Training',     law:'OAC 310:677',                      file:'05_oac677_OAC_310-677_Nurse_Aide_Training.pdf'},
+  {id:'alz',        label:"Alzheimer's / Dementia Disclosure",   law:'63 O.S. § 1-879.2a + OAC 310:673', file:'06_alz_Alzheimers_Dementia_Disclosure.pdf'},
+  {id:'nhca',       label:'Nursing Home Care Act',               law:'63 O.S. § 1-1900.1',               file:'07_nhca_Nursing_Home_Care_Act.pdf'},
+  {id:'oac675',     label:'OAC 310:675 Nursing Facilities',      law:'OAC 310:675',                      file:'08_oac675_OAC_310-675_Nursing_Facilities.pdf'},
+  {id:'continuum',  label:'Continuum of Care / Assisted Living', law:'63 O.S. § 1-890.1 + OAC 310:663',  file:'09_continuum_Continuum_of_Care_Assisted_Living.pdf'},
+  {id:'residential',label:'Residential Care',                    law:'63 O.S. § 1-819.1 + OAC 310:680',  file:'10_residential_Residential_Care.pdf'},
+  {id:'adultday',   label:'Adult Day Care',                      law:'63 O.S. § 1-870 + OAC 310:605',    file:'11_adultday_Adult_Day_Care.pdf'},
+];
+
+const BADGES_DEF = [
+  {id:'first_quiz',   icon:'🎯', name:'First Quiz',       desc:'Completed your first quiz'},
+  {id:'streak_3',     icon:'🔥', name:'3-Day Streak',     desc:'Studied 3 days in a row'},
+  {id:'streak_7',     icon:'🏆', name:'7-Day Streak',     desc:'Studied 7 days in a row'},
+  {id:'q100',         icon:'💯', name:'100 Questions',    desc:'Answered 100 questions'},
+  {id:'q500',         icon:'⭐', name:'500 Questions',    desc:'Answered 500 questions'},
+  {id:'ace',          icon:'🌟', name:'Ace',              desc:'Scored 90%+ on a quiz'},
+  {id:'perfect',      icon:'👑', name:'Perfect Score',    desc:'Scored 100% on a quiz'},
+  {id:'all_sections', icon:'📚', name:'All Sections',     desc:'Studied all 11 sections'},
+];
+
+const SCRIPTURES = [
+  '"I can do all things through Christ who strengthens me." — Philippians 4:13',
+  '"For I know the plans I have for you, plans to prosper you." — Jeremiah 29:11',
+  '"She is clothed with strength and dignity." — Proverbs 31:25',
+  '"Trust in the Lord with all your heart." — Proverbs 3:5',
+  '"Be strong and courageous. Do not be afraid." — Joshua 1:9',
 ];
 
 const st = {
-  view: 'auth',   // auth | dashboard | loading | quiz | results
-  authTab: 'signin',
-  workerUrl: 'https://withered-forest-c81f.wanazgambo.workers.dev/',
-  apiKey: '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',
+  view: 'auth', authTab: 'signin',
   token: localStorage.getItem('token') || '',
   userId: localStorage.getItem('userId') || '',
   displayName: localStorage.getItem('displayName') || '',
-  progress: [],
-  sessions: [],
+  progress: [], sessions: [], bookmarks: [], badges: [],
+  settings: { daily_goal: 10, timed_mode: false, timer_seconds: 30, exam_date: null },
   dashTab: 'study',
   selectedSections: SECTIONS.map(s => s.id),
   qCount: 10,
-  questions: [],
-  cur: 0,
-  sel: null,
-  answered: false,
-  score: 0,
-  wrong: [],
-  questionLog: [],
-  error: '',
-  saveStatus: '',
+  questions: [], cur: 0, sel: null, answered: false,
+  score: 0, wrong: [], questionLog: [],
+  timerVal: 0, timerInterval: null,
+  saveStatus: '', error: '', msg: '',
+  weeklyData: null, streak: 0,
+  todayCount: parseInt(localStorage.getItem('todayCount') || '0'),
+  todayDate: localStorage.getItem('todayDate') || '',
 };
 
 // ── Helpers ──────────────────────────────────────────────────────────
 function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
-function wurl(action){return st.workerUrl}
+function today(){return new Date().toISOString().split('T')[0]}
+function daysUntil(dateStr){
+  if(!dateStr)return null;
+  const diff=new Date(dateStr)-new Date();
+  return Math.ceil(diff/(1000*60*60*24));
+}
+function sparklineSVG(values){
+  if(!values||values.length<2)return '';
+  const w=80,h=24,pad=2;
+  const min=Math.min(...values),max=Math.max(...values);
+  const range=max-min||1;
+  const pts=values.map((v,i)=>{
+    const x=pad+(i/(values.length-1))*(w-pad*2);
+    const y=h-pad-((v-min)/range)*(h-pad*2);
+    return `${x},${y}`;
+  }).join(' ');
+  const trend=values[values.length-1]>=values[0];
+  return `<svg class="sparkline" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+    <polyline points="${pts}" fill="none" stroke="${trend?'var(--success)':'var(--danger)'}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
 async function api(action, body={}, extraHeaders={}){
-  const r = await fetch(st.workerUrl,{
+  const r = await fetch(WORKER_URL,{
     method:'POST',
     headers:{'Content-Type':'application/json','x-action':action,'Authorization':`Bearer ${st.token}`,...extraHeaders},
     body:JSON.stringify(body)
@@ -199,20 +310,55 @@ async function api(action, body={}, extraHeaders={}){
   return r.json();
 }
 
+function resetDayCountIfNeeded(){
+  if(st.todayDate!==today()){
+    st.todayCount=0;
+    st.todayDate=today();
+    localStorage.setItem('todayCount','0');
+    localStorage.setItem('todayDate',today());
+  }
+}
+
+function updateStreak(){
+  const sessions=st.sessions;
+  if(!sessions.length){st.streak=0;return;}
+  const days=[...new Set(sessions.map(s=>s.created_at.split('T')[0]))].sort().reverse();
+  let streak=0,check=today();
+  for(const d of days){
+    if(d===check){streak++;const dt=new Date(check);dt.setDate(dt.getDate()-1);check=dt.toISOString().split('T')[0];}
+    else if(d<check)break;
+  }
+  st.streak=streak;
+}
+
+function computeWeekly(){
+  const monday=new Date();
+  monday.setDate(monday.getDate()-monday.getDay()+1);
+  monday.setHours(0,0,0,0);
+  const weekSessions=st.sessions.filter(s=>new Date(s.created_at)>=monday);
+  if(!weekSessions.length){st.weeklyData=null;return;}
+  const totalQ=weekSessions.reduce((a,s)=>a+s.total,0);
+  const totalScore=weekSessions.reduce((a,s)=>a+s.score,0);
+  const avgPct=Math.round((totalScore/totalQ)*100);
+  st.weeklyData={sessions:weekSessions.length,questions:totalQ,avgPct};
+}
+
 // ── Render ────────────────────────────────────────────────────────────
 function render(){
-  const app = document.getElementById('app');
-  const scoreEl = document.getElementById('header-score');
-  const nameEl = document.getElementById('header-name');
-  const logoutBtn = document.getElementById('logout-btn');
+  resetDayCountIfNeeded();
+  const app=document.getElementById('app');
+  const scoreEl=document.getElementById('header-score');
+  const streakEl=document.getElementById('header-streak');
+  const logoutBtn=document.getElementById('logout-btn');
 
   if(st.view==='quiz'&&st.questions.length){
     const done=st.cur+(st.answered?1:0);
     scoreEl.textContent=done>0?`${st.score}/${done}`:'';
   } else scoreEl.textContent='';
 
-  nameEl.textContent = st.displayName || '';
-  logoutBtn.style.display = st.token ? 'block' : 'none';
+  if(st.streak>0&&st.token){streakEl.textContent=`🔥 ${st.streak}`;streakEl.style.display='block';}
+  else streakEl.style.display='none';
+  logoutBtn.style.display=st.token?'block':'none';
 
   if(st.view==='auth')        app.innerHTML=authView();
   else if(st.view==='dashboard') app.innerHTML=dashView();
@@ -222,160 +368,105 @@ function render(){
   bind();
 }
 
-// ── Auth view ─────────────────────────────────────────────────────────
+// ── AUTH VIEW ─────────────────────────────────────────────────────────
 function authView(){
-  const isIn = st.authTab==='signin';
-  return `
-  <div class="auth-wrap">
+  const isIn=st.authTab==='signin';
+  return `<div class="auth-wrap">
     <div class="auth-photo"><img src="IMG_1837.jpg" alt="Rosa"></div>
     <div class="auth-title">Rosa's Study Room</div>
     <div class="auth-motto">This girl can and this girl will.</div>
     <div class="auth-verse">"I can do all things through Christ who strengthens me."</div>
     <div class="auth-ref">— Philippians 4:13</div>
-
-
-
     <div class="auth-tabs">
       <div class="auth-tab ${isIn?'active':''}" data-tab="signin">Sign In</div>
       <div class="auth-tab ${!isIn?'active':''}" data-tab="signup">Create Account</div>
     </div>
-
     ${!isIn?`<div class="field"><label>Your Name</label><input type="text" id="auth-name" placeholder="Rosa"></div>`:''}
     <div class="field"><label>Email</label><input type="email" id="auth-email" placeholder="you@email.com"></div>
     <div class="field"><label>Password</label><input type="password" id="auth-password" placeholder="••••••••"></div>
     <button class="btn btn-primary" id="auth-submit">${isIn?'Sign In':'Create Account'}</button>
     ${st.error?`<div class="error-box">${st.error}</div>`:''}
-    <div class="auth-switch">
-      ${isIn?`Don't have an account? <span data-tab="signup">Create one</span>`:`Already have an account? <span data-tab="signin">Sign in</span>`}
+    ${st.msg?`<div class="success-box">${st.msg}</div>`:''}
+    <div style="font-size:12px;color:var(--text-3);text-align:center;margin-top:12px">
+      ${isIn?`No account? <span style="color:var(--accent);cursor:pointer;text-decoration:underline" data-tab="signup">Create one</span>`
+             :`Have an account? <span style="color:var(--accent);cursor:pointer;text-decoration:underline" data-tab="signin">Sign in</span>`}
     </div>
   </div>`;
 }
 
-// ── Dashboard view ────────────────────────────────────────────────────
+// ── DASHBOARD VIEW ────────────────────────────────────────────────────
 function dashView(){
-  // ── History tab ──────────────────────────────────────────────────
-  if(st.dashTab==='history'){
-    const rows = st.sessions.length ? st.sessions.map(s=>{
-      const date = new Date(s.created_at);
-      const dateStr = date.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-      const timeStr = date.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-      const secNames = (s.section_ids||[]).map(id=>SECTIONS.find(x=>x.id===id)?.label||id).join(', ');
-      const color = s.pct>=80?'var(--success)':s.pct>=60?'var(--accent)':'var(--danger)';
-      return `<div class="history-row">
-        <div>
-          <div class="history-date">${dateStr} at ${timeStr}</div>
-          <div class="history-sections">${secNames}</div>
-        </div>
-        <div style="text-align:right;flex-shrink:0;margin-left:12px">
-          <div class="history-pct" style="color:${color}">${s.pct}%</div>
-          <div class="history-detail">${s.score}/${s.total} correct</div>
-        </div>
-      </div>`;
-    }).join('') : '<div class="empty-state">No quiz history yet.<br>Take your first quiz to see results here.</div>';
+  const tabs=`<div class="dash-tabs">
+    <div class="dash-tab ${st.dashTab==='study'?'active':''}" data-dashtab="study">📖 Study</div>
+    <div class="dash-tab ${st.dashTab==='progress'?'active':''}" data-dashtab="progress">📊 Progress</div>
+    <div class="dash-tab ${st.dashTab==='history'?'active':''}" data-dashtab="history">🕐 History</div>
+    <div class="dash-tab ${st.dashTab==='bookmarks'?'active':''}" data-dashtab="bookmarks">🔖 Bookmarks</div>
+    <div class="dash-tab ${st.dashTab==='settings'?'active':''}" data-dashtab="settings">⚙ Settings</div>
+  </div>`;
 
-    return `
-    <div class="dash-hello">Welcome back, ${st.displayName||'Studier'} 👋</div>
-    <div class="dash-sub">Oklahoma NHA State Standards Exam Prep</div>
-    <div class="dash-tabs">
-      <div class="dash-tab" data-dashtab="study">Study</div>
-      <div class="dash-tab active" data-dashtab="history">Quiz History</div>
-      <div class="dash-tab" data-dashtab="progress">Progress</div>
+  const hello=`<div style="font-family:'Lora',serif;font-size:22px;font-weight:500;margin-bottom:.35rem">Welcome back, ${st.displayName||'Studier'} 👋</div>
+  <div style="color:var(--text-2);font-size:14px;margin-bottom:1.5rem">Oklahoma NHA State Standards Exam Prep</div>`;
+
+  if(st.dashTab==='study') return hello+tabs+studyTab();
+  if(st.dashTab==='progress') return hello+tabs+progressTab();
+  if(st.dashTab==='history') return hello+tabs+historyTab();
+  if(st.dashTab==='bookmarks') return hello+tabs+bookmarksTab();
+  if(st.dashTab==='settings') return hello+tabs+settingsTab();
+  return hello+tabs+studyTab();
+}
+
+function studyTab(){
+  const days=daysUntil(st.settings.exam_date);
+  const countdown=days!==null?`<div class="countdown-banner">
+    <div><div class="countdown-days">${Math.max(0,days)}</div><div class="countdown-label">days until exam</div></div>
+    <div class="countdown-right">📅 ${new Date(st.settings.exam_date+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}<br><span style="opacity:.7">Stay consistent — you've got this!</span></div>
+  </div>`:'';
+
+  const goal=st.settings.daily_goal||10;
+  const done=Math.min(st.todayCount,goal);
+  const pct=Math.round((done/goal)*100);
+  const r=20,circ=2*Math.PI*r;
+  const offset=circ-(pct/100)*circ;
+  const goalCard=`<div class="goal-card">
+    <div class="goal-ring">
+      <svg width="60" height="60" viewBox="0 0 60 60">
+        <circle cx="30" cy="30" r="${r}" fill="none" stroke="var(--border)" stroke-width="5"/>
+        <circle cx="30" cy="30" r="${r}" fill="none" stroke="${done>=goal?'var(--success)':'var(--accent)'}" stroke-width="5"
+          stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round" transform="rotate(-90 30 30)"/>
+        <text x="30" y="35" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text)">${pct}%</text>
+      </svg>
     </div>
-    <div>${rows}</div>`;
-  }
-
-  // ── Progress tab ─────────────────────────────────────────────────
-  if(st.dashTab==='progress'){
-    const progCards = SECTIONS.map(s=>{
-      const p=st.progress.find(x=>x.section_id===s.id);
-      const pct=p?Math.round((p.correct_answers/Math.max(p.total_questions,1))*100):0;
-      const color=pct>=80?'#1A6640':pct>=60?'var(--accent)':'#8A1B1B';
-      return `<div class="prog-card">
-        <div class="prog-card-title">${s.label}</div>
-        <div class="prog-card-law">${s.law}</div>
-        <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${pct}%;background:${color}"></div></div>
-        <div class="prog-card-stats">
-          <span class="prog-card-pct" style="color:${color}">${p?pct+'%':'—'}</span>
-          <span>${p?p.correct_answers+'/'+p.total_questions+' correct':''}</span>
-        </div>
-        ${p?`<div style="font-size:11px;color:var(--text-3);margin-top:4px">${p.sessions_taken} session${p.sessions_taken!==1?'s':''} · Last: ${new Date(p.last_taken).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>`:'<div style="font-size:11px;color:var(--text-3);margin-top:4px;font-style:italic">Not started</div>'}
-      </div>`;
-    }).join('');
-
-    const totalSessions=st.progress.reduce((a,p)=>a+p.sessions_taken,0);
-    const totalQ=st.progress.reduce((a,p)=>a+p.total_questions,0);
-    const totalCorrect=st.progress.reduce((a,p)=>a+p.correct_answers,0);
-    const overallPct=totalQ>0?Math.round((totalCorrect/totalQ)*100):0;
-
-    return `
-    <div class="dash-hello">Welcome back, ${st.displayName||'Studier'} 👋</div>
-    <div class="dash-sub">Oklahoma NHA State Standards Exam Prep</div>
-    <div class="dash-tabs">
-      <div class="dash-tab" data-dashtab="study">Study</div>
-      <div class="dash-tab" data-dashtab="history">Quiz History</div>
-      <div class="dash-tab active" data-dashtab="progress">Progress</div>
+    <div class="goal-text">
+      <div class="goal-count">${done} / ${goal} questions today</div>
+      <div class="goal-sub">${done>=goal?'✅ Daily goal reached! Keep going!':'Keep going — you\'re building momentum.'}</div>
     </div>
-    ${totalSessions>0?`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem">
-      <div class="stat"><div class="stat-n">${overallPct}%</div><div class="stat-l">Overall accuracy</div></div>
-      <div class="stat"><div class="stat-n">${totalSessions}</div><div class="stat-l">Sessions taken</div></div>
-      <div class="stat"><div class="stat-n">${totalQ}</div><div class="stat-l">Questions answered</div></div>
-    </div>`:''}
-    <div class="progress-grid">${progCards}</div>`;
-  }
+  </div>`;
 
-  // ── Study tab (default) ──────────────────────────────────────────
-  const secBtns = SECTIONS.map(s=>{
+  const weekly=st.weeklyData?`<div class="weekly-box">
+    <div class="weekly-title">📅 This Week</div>
+    <div class="weekly-stats">
+      <span><strong>${st.weeklyData.sessions}</strong> sessions</span>
+      <span><strong>${st.weeklyData.questions}</strong> questions</span>
+      <span><strong>${st.weeklyData.avgPct}%</strong> avg score</span>
+    </div>
+  </div>`:'';
+
+  const secBtns=SECTIONS.map(s=>{
     const active=st.selectedSections.includes(s.id)?'active':'';
     const prog=st.progress.find(p=>p.section_id===s.id);
     const pct=prog?Math.round((prog.correct_answers/Math.max(prog.total_questions,1))*100):null;
     return `<button class="sec-btn ${active}" data-sec="${s.id}">
       <span class="sec-cite">${s.law}</span>${s.label}
-      ${pct!==null?`<span style="font-size:10px;color:var(--accent);margin-top:3px;display:block">${pct}% accuracy · ${prog.sessions_taken} session${prog.sessions_taken!==1?'s':''}</span>`:'<span style="font-size:10px;color:var(--text-3);margin-top:3px;display:block">Not started</span>'}
+      <span style="font-size:10px;color:${pct!==null?(pct>=80?'var(--success)':pct>=60?'var(--accent)':'var(--danger)'):'var(--text-3)'};margin-top:3px;display:block">
+        ${pct!==null?pct+'% accuracy':'Not started yet'}
+      </span>
     </button>`;
   }).join('');
 
-  const progCards = SECTIONS.map(s=>{
-    const p=st.progress.find(x=>x.section_id===s.id);
-    const pct=p?Math.round((p.correct_answers/Math.max(p.total_questions,1))*100):0;
-    const color=pct>=80?'#1A6640':pct>=60?'var(--accent)':'#8A1B1B';
-    return `<div class="prog-card">
-      <div class="prog-card-title">${s.label}</div>
-      <div class="prog-card-law">${s.law}</div>
-      <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${pct}%;background:${color}"></div></div>
-      <div class="prog-card-stats">
-        <span class="prog-card-pct" style="color:${color}">${p?pct+'%':'—'}</span>
-        <span>${p?`${p.correct_answers}/${p.total_questions} correct`:''}</span>
-      </div>
-    </div>`;
-  }).join('');
+  const timerLabel=st.settings.timed_mode?`${st.settings.timer_seconds}s per question`:'Off';
 
-  const totalSessions=st.progress.reduce((a,p)=>a+p.sessions_taken,0);
-  const totalQ=st.progress.reduce((a,p)=>a+p.total_questions,0);
-  const totalCorrect=st.progress.reduce((a,p)=>a+p.correct_answers,0);
-  const overallPct=totalQ>0?Math.round((totalCorrect/totalQ)*100):0;
-
-  return `
-  <div class="dash-hello">Welcome back, ${st.displayName||'Studier'} 👋</div>
-  <div class="dash-sub">Oklahoma NHA State Standards Exam Prep</div>
-
-  ${totalSessions>0?`
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.75rem">
-    <div class="stat"><div class="stat-n">${overallPct}%</div><div class="stat-l">Overall accuracy</div></div>
-    <div class="stat"><div class="stat-n">${totalSessions}</div><div class="stat-l">Sessions taken</div></div>
-    <div class="stat"><div class="stat-n">${totalQ}</div><div class="stat-l">Questions answered</div></div>
-  </div>`:''}
-
-  ${totalSessions>0?`
-  <div class="section-label">Your Progress</div>
-  <div class="progress-grid">${progCards}</div>
-  <hr class="divider">`:''}
-
-  <div class="dash-tabs">
-    <div class="dash-tab active" data-dashtab="study">Study</div>
-    <div class="dash-tab" data-dashtab="history">Quiz History</div>
-    <div class="dash-tab" data-dashtab="progress">Progress</div>
-  </div>
-  <div class="section-label">Pick sections to quiz — ${st.selectedSections.length} selected</div>
+  return `${countdown}${goalCard}${weekly}
+  <div class="section-label">Pick sections — ${st.selectedSections.length} selected</div>
   <div class="section-grid">${secBtns}</div>
   <div class="sec-actions">
     <button class="btn btn-sm" id="sel-all">Select all</button>
@@ -390,27 +481,147 @@ function dashView(){
         <option value="15" ${st.qCount==15?'selected':''}>15</option>
         <option value="20" ${st.qCount==20?'selected':''}>20</option>
       </select>
+      <span class="field-label" style="margin-left:4px">Timer: ${timerLabel}</span>
     </div>
     <button class="btn btn-primary" id="start-btn" style="width:auto" ${st.selectedSections.length?'':'disabled'}>Start quiz →</button>
   </div>
   ${st.error?`<div class="error-box" style="margin-top:1rem">${st.error}</div>`:''}`;
 }
 
+function progressTab(){
+  const totalSessions=st.progress.reduce((a,p)=>a+p.sessions_taken,0);
+  const totalQ=st.progress.reduce((a,p)=>a+p.total_questions,0);
+  const totalCorrect=st.progress.reduce((a,p)=>a+p.correct_answers,0);
+  const overallPct=totalQ>0?Math.round((totalCorrect/totalQ)*100):0;
+
+  // Per-section sparkline data from sessions
+  const sectionHistory={};
+  [...st.sessions].reverse().forEach(s=>{
+    (s.section_ids||[]).forEach(sid=>{
+      if(!sectionHistory[sid])sectionHistory[sid]=[];
+      if(sectionHistory[sid].length<5)sectionHistory[sid].push(s.pct);
+    });
+  });
+
+  const cards=SECTIONS.map(s=>{
+    const p=st.progress.find(x=>x.section_id===s.id);
+    const pct=p?Math.round((p.correct_answers/Math.max(p.total_questions,1))*100):0;
+    const color=pct>=80?'#1A6640':pct>=60?'var(--accent)':'#8A1B1B';
+    const ready=p&&p.sessions_taken>=3&&pct>=80;
+    const spark=sparklineSVG(sectionHistory[s.id]||[]);
+    return `<div class="prog-card">
+      ${ready?`<div class="ready-badge">✓ Ready</div>`:''}
+      <div class="prog-card-title">${s.label}</div>
+      <div class="prog-card-law">${s.law}</div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="prog-card-stats">
+        <span class="prog-card-pct" style="color:${color}">${p?pct+'%':'—'}</span>
+        <span style="font-size:11px">${p?p.correct_answers+'/'+p.total_questions:''}</span>
+      </div>
+      ${p?`<div style="font-size:11px;color:var(--text-3);margin-top:4px">${p.sessions_taken} session${p.sessions_taken!==1?'s':''} · ${new Date(p.last_taken).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>`:'<div style="font-size:11px;color:var(--text-3);margin-top:4px;font-style:italic">Not started</div>'}
+      ${spark}
+    </div>`;
+  }).join('');
+
+  const earnedIds=st.badges.map(b=>b.badge_id);
+  const badgeHtml=BADGES_DEF.map(b=>`<div class="badge ${earnedIds.includes(b.id)?'earned':''}">
+    <span class="badge-icon">${b.icon}</span>${b.name}
+  </div>`).join('');
+
+  return `${totalSessions>0?`<div class="stat-row">
+    <div class="stat"><div class="stat-n">${overallPct}%</div><div class="stat-l">Overall accuracy</div></div>
+    <div class="stat"><div class="stat-n">${totalSessions}</div><div class="stat-l">Sessions</div></div>
+    <div class="stat"><div class="stat-n">${totalQ}</div><div class="stat-l">Questions answered</div></div>
+  </div>`:''}
+  <div class="section-label">Badges</div>
+  <div class="badges-row">${badgeHtml}</div>
+  <div class="section-label">Section Progress</div>
+  <div class="progress-grid">${cards}</div>
+  <div style="font-size:12px;color:var(--text-3);margin-top:-.5rem">✓ Ready = 3+ sessions & 80%+ accuracy · Sparklines show last 5 sessions</div>`;
+}
+
+function historyTab(){
+  if(!st.sessions.length)return`<div class="empty-state">No quiz history yet.<br>Take your first quiz to see it here.</div>`;
+  const rows=st.sessions.map(s=>{
+    const d=new Date(s.created_at);
+    const dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const timeStr=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    const secNames=(s.section_ids||[]).map(id=>SECTIONS.find(x=>x.id===id)?.label||id).join(', ');
+    const color=s.pct>=80?'var(--success)':s.pct>=60?'var(--accent)':'var(--danger)';
+    return `<div class="history-row">
+      <div><div class="history-date">${dateStr} at ${timeStr}</div><div class="history-sections">${secNames}</div></div>
+      <div style="flex-shrink:0;margin-left:12px">
+        <div class="history-pct" style="color:${color}">${s.pct}%</div>
+        <div class="history-detail">${s.score}/${s.total}</div>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div>${rows}</div>`;
+}
+
+function bookmarksTab(){
+  if(!st.bookmarks.length)return`<div class="empty-state">No bookmarks yet.<br>During a quiz, tap 🔖 on any question to save it here.</div>`;
+  return st.bookmarks.map((b,i)=>`<div class="bookmark-card">
+    <div class="bookmark-section">${SECTIONS.find(s=>s.id===b.section_id)?.label||b.section_id}</div>
+    <div class="bookmark-q">${b.question_text}</div>
+    <div class="bookmark-actions">
+      <button class="btn btn-sm btn-danger" data-unbookmark="${i}">Remove</button>
+    </div>
+  </div>`).join('');
+}
+
+function settingsTab(){
+  const s=st.settings;
+  return `<div class="settings-section">
+    <div class="settings-title">Exam Date</div>
+    <div class="field"><label>Your NHA Exam Date</label>
+      <input type="date" id="exam-date" value="${s.exam_date||''}">
+    </div>
+  </div>
+  <div class="settings-section">
+    <div class="settings-title">Daily Goal</div>
+    <div class="field"><label>Questions per day</label>
+      <select id="daily-goal">
+        ${[5,10,15,20,25,30].map(n=>`<option value="${n}" ${s.daily_goal==n?'selected':''}>${n} questions</option>`).join('')}
+      </select>
+    </div>
+  </div>
+  <div class="settings-section">
+    <div class="settings-title">Timed Mode</div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">
+      <label class="toggle"><input type="checkbox" id="timed-toggle" ${s.timed_mode?'checked':''}><span class="toggle-slider"></span></label>
+      <span style="font-size:14px;color:var(--text-2)">${s.timed_mode?'On':'Off'} — adds pressure to simulate the real exam</span>
+    </div>
+    ${s.timed_mode?`<div class="field"><label>Seconds per question</label>
+      <select id="timer-secs">
+        <option value="20" ${s.timer_seconds==20?'selected':''}>20 seconds</option>
+        <option value="30" ${s.timer_seconds==30?'selected':''}>30 seconds</option>
+        <option value="45" ${s.timer_seconds==45?'selected':''}>45 seconds</option>
+        <option value="60" ${s.timer_seconds==60?'selected':''}>60 seconds</option>
+      </select>
+    </div>`:''}
+  </div>
+  <button class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+  ${st.msg?`<div class="success-box" style="margin-top:10px">${st.msg}</div>`:''}`;
+}
+
+// ── LOADING ───────────────────────────────────────────────────────────
 function loadingView(){
   const names=st.selectedSections.map(id=>SECTIONS.find(s=>s.id===id)?.label).join(', ');
-  return `<div class="loading">
-    <div class="spinner"></div>
+  return `<div class="loading"><div class="spinner"></div>
     <p>Building your quiz…</p>
     <small>${names}</small>
-    <small style="margin-top:6px">Fetching PDFs and generating questions — 30–60s</small>
+    <small style="margin-top:6px">Fetching PDFs & generating questions — 30–60s</small>
   </div>`;
 }
 
+// ── QUIZ VIEW ─────────────────────────────────────────────────────────
 function quizView(){
   const q=st.questions[st.cur];
   const total=st.questions.length;
   const pct=Math.round(st.cur/total*100);
   const L=['A','B','C','D'];
+  const isBookmarked=st.bookmarks.some(b=>b.question_text===q.question);
   const opts=q.options.map((opt,i)=>{
     let cls='option';
     if(st.answered){cls+=' locked';if(i===q.correct)cls+=' correct';else if(i===st.sel)cls+=' wrong';}
@@ -421,145 +632,141 @@ function quizView(){
     <strong>${st.sel===q.correct?'Correct.':'Incorrect.'}</strong> ${q.explanation}
     ${q.cite?`<div class="feedback-cite">${q.cite}</div>`:''}
   </div>`:'';
-  return `
-  <div class="progress-wrap">
+
+  const timerBar=st.settings.timed_mode&&!st.answered?`<div class="timer-bar-wrap">
+    <div class="timer-bar" id="timer-bar" style="width:${(st.timerVal/st.settings.timer_seconds)*100}%"></div>
+  </div>`:'';
+
+  return `<div class="progress-wrap">
     <div class="progress-meta"><span>Question ${st.cur+1} of ${total}</span><span>Score: ${st.score}/${st.cur+(st.answered?1:0)}</span></div>
     <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
   </div>
+  ${timerBar}
   <div class="q-card">
     <div class="q-meta">
-      <span class="tag ${q.type==='extracted'?'tag-ex':'tag-gen'}">${q.type==='extracted'?'Exam question':'Generated'}</span>
+      <span class="tag ${q.type==='extracted'?'tag-ex':'tag-gen'}">${q.type==='extracted'?'Exam Q':'Generated'}</span>
       ${q.section?`<span class="q-section">${q.section}</span>`:''}
+      <button class="bookmark-btn ${isBookmarked?'active':''}" id="bookmark-btn" title="Bookmark">🔖</button>
     </div>
     <div class="q-text">${q.question}</div>
     ${opts}${feedback}
   </div>
   <div class="nav-row">
-    <span style="font-size:12px;color:var(--text-3)">${st.selectedSections.length} section${st.selectedSections.length!==1?'s':''}</span>
+    <span style="font-size:12px;color:var(--text-3)">${st.settings.timed_mode&&!st.answered?`⏱ ${st.timerVal}s`:''}</span>
     ${st.answered
       ?`<button class="btn btn-primary" id="next-btn" style="width:auto">${st.cur+1<total?'Next →':'See results →'}</button>`
       :`<button class="btn btn-primary" id="submit-btn" style="width:auto" ${st.sel===null?'disabled':''}>Check answer</button>`}
   </div>`;
 }
 
+// ── RESULTS VIEW ──────────────────────────────────────────────────────
 function resultsView(){
   const total=st.questions.length;
   const pct=Math.round(st.score/total*100);
-  const msg=pct>=90?'Outstanding 🎓':pct>=75?'Good progress 👍':pct>=60?'Keep at it 📖':'More study needed 📚';
+
+  // Encouraging message based on score + improvement
+  let msg='';
+  const scripture=SCRIPTURES[Math.floor(Math.random()*SCRIPTURES.length)];
+  if(pct===100) msg=`Perfect score! 🌟 Absolutely incredible work. ${scripture}`;
+  else if(pct>=90) msg=`Outstanding! 🎓 You're exam-ready on these sections. ${scripture}`;
+  else if(pct>=80) msg=`Great work! 💪 You're solidly understanding this material. ${scripture}`;
+  else if(pct>=70) msg=`Good progress! 📖 A few more sessions and you'll nail this. ${scripture}`;
+  else if(pct>=60) msg=`Keep going! 🌱 Every quiz makes you stronger. ${scripture}`;
+  else msg=`Don't give up! 🙏 Review the feedback above and try again. ${scripture}`;
+
   const missed=[...new Set(st.wrong.map(q=>q.section).filter(Boolean))].slice(0,5);
   return `<div class="results-card">
-    <div class="score-pct">${pct}%</div>
-    <div class="score-sub">${msg} — ${st.score} of ${total} correct</div>
-    <div class="stats-grid">
+    <div class="score-pct" style="color:${pct>=80?'var(--success)':pct>=60?'var(--accent)':'var(--danger)'}">${pct}%</div>
+    <div class="score-sub">${st.score} of ${total} correct</div>
+    <div class="encourage-msg">${msg}</div>
+    <div class="results-stats">
       <div class="stat"><div class="stat-n">${st.score}</div><div class="stat-l">Correct</div></div>
       <div class="stat"><div class="stat-n">${total-st.score}</div><div class="stat-l">Missed</div></div>
       <div class="stat"><div class="stat-n">${st.questions.filter(q=>q.type==='extracted').length}</div><div class="stat-l">Exam Qs</div></div>
     </div>
-    ${missed.length?`<div class="review-box"><div class="review-title">Sections to review</div><div class="review-items">${missed.join(' · ')}</div></div>`:''}
+    ${missed.length?`<div class="review-box"><div class="review-title">Sections to review</div><div style="font-size:13px;color:var(--warn-text)">${missed.join(' · ')}</div></div>`:''}
     <div class="results-actions">
-      <button class="btn btn-primary" id="retry-btn">Retake</button>
-      <button class="btn" id="back-dash-btn">Back to dashboard</button>
+      <button class="btn btn-primary" id="retry-btn">Retake quiz</button>
+      <button class="btn" id="back-dash-btn">Dashboard</button>
     </div>
     <div class="save-status" id="save-status">${st.saveStatus}</div>
   </div>`;
 }
 
-// ── Bind events ───────────────────────────────────────────────────────
+// ── BIND ──────────────────────────────────────────────────────────────
 function bind(){
   // Auth tabs
-  document.querySelectorAll('.auth-tab,[data-tab]').forEach(el=>{
-    el.onclick=()=>{st.authTab=el.dataset.tab;st.error='';render()};
-  });
-
+  document.querySelectorAll('[data-tab]').forEach(el=>el.onclick=()=>{st.authTab=el.dataset.tab;st.error='';st.msg='';render()});
   // Auth submit
   const authBtn=document.getElementById('auth-submit');
-  if(authBtn) authBtn.onclick=handleAuth;
-
-  // Logout
-  const logBtn=document.getElementById('logout-btn');
-  if(logBtn) logBtn.onclick=()=>{
-    localStorage.clear();
-    Object.assign(st,{token:'',userId:'',displayName:'',progress:[],view:'auth',error:''});
+  if(authBtn)authBtn.onclick=handleAuth;
+  // Dashboard tabs
+  document.querySelectorAll('[data-dashtab]').forEach(el=>el.onclick=()=>{st.dashTab=el.dataset.dashtab;st.msg='';render()});
+  // Section picker
+  document.querySelectorAll('.sec-btn').forEach(btn=>btn.onclick=()=>{
+    const id=btn.dataset.sec;
+    const idx=st.selectedSections.indexOf(id);
+    if(idx>=0)st.selectedSections.splice(idx,1);else st.selectedSections.push(id);
     render();
-  };
-
-  // Dashboard tab switching
-  document.querySelectorAll('[data-dashtab]').forEach(el=>{
-    el.onclick=()=>{st.dashTab=el.dataset.dashtab;render()};
-  });
-
-  // Section toggles
-  document.querySelectorAll('.sec-btn').forEach(btn=>{
-    btn.onclick=()=>{
-      const id=btn.dataset.sec;
-      const idx=st.selectedSections.indexOf(id);
-      if(idx>=0)st.selectedSections.splice(idx,1);else st.selectedSections.push(id);
-      render();
-    };
   });
   const selAll=document.getElementById('sel-all');
-  if(selAll) selAll.onclick=()=>{st.selectedSections=SECTIONS.map(s=>s.id);render()};
+  if(selAll)selAll.onclick=()=>{st.selectedSections=SECTIONS.map(s=>s.id);render()};
   const selNone=document.getElementById('sel-none');
-  if(selNone) selNone.onclick=()=>{st.selectedSections=[];render()};
+  if(selNone)selNone.onclick=()=>{st.selectedSections=[];render()};
   const qc=document.getElementById('q-count');
-  if(qc) qc.onchange=e=>{st.qCount=parseInt(e.target.value)};
-
+  if(qc)qc.onchange=e=>st.qCount=parseInt(e.target.value);
+  // Start
   const startBtn=document.getElementById('start-btn');
-  if(startBtn) startBtn.onclick=startQuiz;
-
+  if(startBtn)startBtn.onclick=startQuiz;
   // Quiz options
-  document.querySelectorAll('.option[data-i]').forEach(opt=>{
-    opt.onclick=()=>{if(!st.answered){st.sel=parseInt(opt.dataset.i);render()}};
+  document.querySelectorAll('.option[data-i]').forEach(opt=>opt.onclick=()=>{
+    if(!st.answered){st.sel=parseInt(opt.dataset.i);render();}
   });
   const submitBtn=document.getElementById('submit-btn');
-  if(submitBtn) submitBtn.onclick=()=>{
-    st.answered=true;
-    const q=st.questions[st.cur];
-    const correct=st.sel===q.correct;
-    if(correct)st.score++;else st.wrong.push(q);
-    st.questionLog.push({section_id:q.section||st.selectedSections[0],question_text:q.question,correct,user_id:st.userId});
-    render();
-  };
+  if(submitBtn)submitBtn.onclick=submitAnswer;
   const nextBtn=document.getElementById('next-btn');
-  if(nextBtn) nextBtn.onclick=()=>{
-    st.cur++;st.sel=null;st.answered=false;
-    if(st.cur>=st.questions.length){st.view='results';render();saveSession();return;}
-    render();
-  };
+  if(nextBtn)nextBtn.onclick=nextQuestion;
   const retryBtn=document.getElementById('retry-btn');
-  if(retryBtn) retryBtn.onclick=()=>{
+  if(retryBtn)retryBtn.onclick=()=>{
+    clearTimer();
     st.cur=0;st.score=0;st.sel=null;st.answered=false;st.wrong=[];st.questionLog=[];st.saveStatus='';
-    st.questions=shuffle(st.questions);st.view='quiz';render();
+    st.questions=shuffle(st.questions);st.view='quiz';startTimer();render();
   };
   const backBtn=document.getElementById('back-dash-btn');
-  if(backBtn) backBtn.onclick=()=>{
-    st.cur=0;st.score=0;st.sel=null;st.answered=false;st.wrong=[];st.questionLog=[];st.saveStatus='';
-    loadDashboard();
-  };
+  if(backBtn)backBtn.onclick=()=>{clearTimer();loadDashboard()};
+  // Bookmark button in quiz
+  const bmBtn=document.getElementById('bookmark-btn');
+  if(bmBtn)bmBtn.onclick=()=>toggleBookmark(st.questions[st.cur]);
+  // Unbookmark
+  document.querySelectorAll('[data-unbookmark]').forEach(btn=>btn.onclick=()=>{
+    const q=st.bookmarks[parseInt(btn.dataset.unbookmark)];
+    if(q)toggleBookmark(q,true);
+  });
+  // Settings
+  const saveSettingsBtn=document.getElementById('save-settings-btn');
+  if(saveSettingsBtn)saveSettingsBtn.onclick=saveSettings;
+  const timedToggle=document.getElementById('timed-toggle');
+  if(timedToggle)timedToggle.onchange=e=>{st.settings.timed_mode=e.target.checked;render()};
 }
 
-// ── Auth ──────────────────────────────────────────────────────────────
+// ── AUTH ──────────────────────────────────────────────────────────────
 async function handleAuth(){
-  st.error='';
-
-
+  st.error='';st.msg='';
   const email=document.getElementById('auth-email')?.value?.trim();
   const password=document.getElementById('auth-password')?.value?.trim();
   if(!email||!password){st.error='Please fill in all fields.';render();return;}
-
   const btn=document.getElementById('auth-submit');
   btn.disabled=true;btn.textContent='Please wait…';
-
   try{
     if(st.authTab==='signup'){
       const name=document.getElementById('auth-name')?.value?.trim()||email.split('@')[0];
       const data=await api('auth-signup',{email,password,display_name:name});
-      if(data.error||data.msg){throw new Error(data.error||data.msg);}
-      st.error='Account created! Check your email to confirm, then sign in.';
+      if(data.error||data.msg)throw new Error(data.error||data.msg);
+      st.msg='Account created! Check your email to confirm, then sign in.';
       st.authTab='signin';
     } else {
       const data=await api('auth-signin',{email,password});
-      if(data.error){throw new Error(data.error);}
+      if(data.error)throw new Error(data.error);
       st.token=data.access_token;
       st.userId=data.user?.id;
       localStorage.setItem('token',st.token);
@@ -567,143 +774,220 @@ async function handleAuth(){
       await loadDashboard();
       return;
     }
-  } catch(e){
-    st.error=e.message;
-  }
+  }catch(e){st.error=e.message;}
+  render();
+}
+
+function logout(){
+  clearTimer();
+  localStorage.clear();
+  Object.assign(st,{token:'',userId:'',displayName:'',progress:[],sessions:[],bookmarks:[],badges:[],view:'auth',error:'',msg:'',streak:0,todayCount:0});
   render();
 }
 
 async function loadDashboard(){
-  // Load profile + progress
   try{
-    const [prof, prog, sess] = await Promise.all([
+    const [profData,prog,sess,bmarks]=await Promise.all([
       api('get-profile'),
       api('get-progress'),
       api('get-sessions'),
+      api('get-bookmarks'),
     ]);
-    st.displayName=prof[0]?.display_name||'';
+    st.displayName=profData.profile?.display_name||'';
+    st.settings={...st.settings,...(profData.settings||{})};
+    st.badges=Array.isArray(profData.badges)?profData.badges:[];
     localStorage.setItem('displayName',st.displayName);
     st.progress=Array.isArray(prog)?prog:[];
     st.sessions=Array.isArray(sess)?sess:[];
-  } catch(e){
-    st.progress=[];
-  }
-  st.view='dashboard';
-  st.error='';
+    st.bookmarks=Array.isArray(bmarks)?bmarks:[];
+    updateStreak();
+    computeWeekly();
+  }catch(e){console.warn('loadDashboard error',e);}
+  st.view='dashboard';st.error='';
   render();
 }
 
-// ── Start Quiz ────────────────────────────────────────────────────────
+// ── SETTINGS ─────────────────────────────────────────────────────────
+async function saveSettings(){
+  const examDate=document.getElementById('exam-date')?.value||null;
+  const dailyGoal=parseInt(document.getElementById('daily-goal')?.value||10);
+  const timedMode=document.getElementById('timed-toggle')?.checked||false;
+  const timerSecs=parseInt(document.getElementById('timer-secs')?.value||30);
+  st.settings={...st.settings,exam_date:examDate,daily_goal:dailyGoal,timed_mode:timedMode,timer_seconds:timerSecs};
+  try{
+    await api('save-settings',{user_id:st.userId,exam_date:examDate||null,daily_goal:dailyGoal,timed_mode:timedMode,timer_seconds:timerSecs,updated_at:new Date().toISOString()});
+    st.msg='Settings saved ✓';
+  }catch(e){st.msg='Saved locally (sync failed)';}
+  render();
+}
+
+// ── QUIZ LOGIC ────────────────────────────────────────────────────────
+let timerInterval=null;
+function startTimer(){
+  clearTimer();
+  if(!st.settings.timed_mode||st.answered)return;
+  st.timerVal=st.settings.timer_seconds;
+  timerInterval=setInterval(()=>{
+    st.timerVal--;
+    const bar=document.getElementById('timer-bar');
+    if(bar)bar.style.width=`${(st.timerVal/st.settings.timer_seconds)*100}%`;
+    const timeEl=document.querySelector('.nav-row span');
+    if(timeEl&&st.timerVal>0)timeEl.textContent=`⏱ ${st.timerVal}s`;
+    if(st.timerVal<=0){clearTimer();if(!st.answered){st.sel=-1;submitAnswer();}}
+  },1000);
+}
+function clearTimer(){clearInterval(timerInterval);timerInterval=null;}
+
+function submitAnswer(){
+  clearTimer();
+  st.answered=true;
+  const q=st.questions[st.cur];
+  const correct=st.sel===q.correct;
+  if(correct)st.score++;else st.wrong.push(q);
+  st.questionLog.push({section_id:q.section||st.selectedSections[0],question_text:q.question,correct,user_id:st.userId});
+  // Update daily count
+  st.todayCount++;
+  localStorage.setItem('todayCount',st.todayCount);
+  render();
+}
+
+function nextQuestion(){
+  st.cur++;st.sel=null;st.answered=false;
+  if(st.cur>=st.questions.length){
+    st.view='results';render();saveSession();
+  } else {
+    render();startTimer();
+  }
+}
+
 async function startQuiz(){
   if(!st.selectedSections.length)return;
   st.view='loading';st.error='';render();
-
   try{
-    // Fetch PDFs from Supabase via worker (one per unique section, merged)
-    const allB64 = [];
+    const allB64=[];
     for(const sid of st.selectedSections){
       const sec=SECTIONS.find(s=>s.id===sid);
       if(!sec)continue;
       const res=await api('get-pdf',{filename:sec.file});
-      if(res.error) throw new Error(`PDF error for ${sec.file}: ${res.error}${res.detail?' — '+res.detail:''}`);
-      if(res.b64) allB64.push(res.b64);
+      if(res.error)throw new Error(`PDF error for ${sec.file}: ${res.error}`);
+      if(res.b64)allB64.push(res.b64);
     }
     if(!allB64.length)throw new Error('Could not load PDF files. Check Supabase storage.');
-
-    // Use first PDF for single-section, or first for multi (keeps context size manageable)
     const b64=allB64[0];
-
     const selInfo=st.selectedSections.map(id=>{
       const s=SECTIONS.find(x=>x.id===id);
       return `- ${s.label} (${s.law})`;
     }).join('\n');
-
     const prompt=`You are an Oklahoma NHA state licensing exam coach.
 Focus ONLY on these sections:
 ${selInfo}
-
 1. EXTRACT any multiple choice questions already in the document (type: "extracted")
 2. GENERATE new questions from those sections (type: "generated")
-
-Generated questions MUST reference specific Oklahoma statutes/OAC rules, timeframes, thresholds, and definitions.
-
-Return ONLY valid JSON — no markdown:
+Generated questions MUST reference specific Oklahoma statutes/OAC rules, timeframes, thresholds, definitions.
+Return ONLY valid JSON:
 {"questions":[{"type":"extracted"|"generated","section":"short section name","question":"text","options":["A","B","C","D"],"correct":0,"explanation":"1-2 sentences","cite":"OAC 310:xxx or 63 O.S. § x"}]}
-
-Return up to ${st.qCount} questions. Prioritize extracted questions first. Make distractors plausible.`;
-
+Return up to ${st.qCount} questions. Prioritize extracted first. Make distractors plausible.`;
     const resp=await api('generate-questions',{
-      model:'claude-sonnet-4-6',
-      max_tokens:4000,
+      model:'claude-sonnet-4-6',max_tokens:4000,
       messages:[{role:'user',content:[
         {type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}},
         {type:'text',text:prompt}
       ]}]
-    },{'x-api-key':st.apiKey});
-
+    },{'x-api-key':API_KEY});
     const text=(resp.content||[]).map(b=>b.text||'').join('');
-    const clean=text.replace(/```json|```/g,'').trim();
-    const parsed=JSON.parse(clean);
-
+    const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
     st.questions=shuffle(parsed.questions);
     st.cur=0;st.score=0;st.sel=null;st.answered=false;st.wrong=[];st.questionLog=[];st.saveStatus='';
     st.view='quiz';
-  } catch(err){
-    st.view='dashboard';
-    st.error='Could not generate questions: '+err.message;
+    render();startTimer();
+  }catch(err){
+    st.view='dashboard';st.error='Could not generate questions: '+err.message;render();
   }
+}
+
+// ── BOOKMARKS ─────────────────────────────────────────────────────────
+async function toggleBookmark(q,forceRemove=false){
+  const data=await api('toggle-bookmark',{
+    user_id:st.userId,
+    section_id:q.section||st.selectedSections[0],
+    question_text:q.question,
+    options:q.options,
+    correct:q.correct,
+    explanation:q.explanation||'',
+    cite:q.cite||'',
+  });
+  // Refresh bookmarks
+  const bmarks=await api('get-bookmarks');
+  st.bookmarks=Array.isArray(bmarks)?bmarks:[];
   render();
 }
 
-// ── Save session ──────────────────────────────────────────────────────
+// ── SAVE SESSION + BADGES ─────────────────────────────────────────────
 async function saveSession(){
   if(!st.token)return;
   const total=st.questions.length;
   const pct=Math.round(st.score/total*100);
-  st.saveStatus='Saving progress…';
-  render();
+  st.saveStatus='Saving…';
+  const el=()=>document.getElementById('save-status');
+  if(el())el().textContent=st.saveStatus;
   try{
     await api('save-session',{
-      session:{
-        user_id:st.userId,
-        section_ids:st.selectedSections,
-        q_count:st.qCount,
-        score:st.score,
-        total,
-        pct,
-        wrong_sections:[...new Set(st.wrong.map(q=>q.section).filter(Boolean))],
-      },
-      question_results:st.questionLog,
-      section_ids:st.selectedSections,
-      score:st.score,
-      total,
+      session:{user_id:st.userId,section_ids:st.selectedSections,q_count:st.qCount,score:st.score,total,pct,wrong_sections:[...new Set(st.wrong.map(q=>q.section).filter(Boolean))]},
+      question_results:st.questionLog,section_ids:st.selectedSections,score:st.score,total,
     });
     st.saveStatus='✓ Progress saved';
-    // Refresh progress data
-    const prog=await api('get-progress');
+    if(el())el().textContent=st.saveStatus;
+    // Refresh data
+    const [prog,sess]=await Promise.all([api('get-progress'),api('get-sessions')]);
     st.progress=Array.isArray(prog)?prog:[];
-  } catch(e){
-    st.saveStatus='Could not save progress — '+e.message;
-  }
-  // Update save status text if results page is still showing
-  const el=document.getElementById('save-status');
-  if(el) el.textContent=st.saveStatus;
-  // Also refresh progress data for dashboard
-  if(st.view==='results'){
-    try{
-      const [prog, sess]=await Promise.all([api('get-progress'),api('get-sessions')]);
-      st.progress=Array.isArray(prog)?prog:[];
-      st.sessions=Array.isArray(sess)?sess:[];
-    } catch(e){}
+    st.sessions=Array.isArray(sess)?sess:[];
+    updateStreak();computeWeekly();
+    // Check badges
+    await checkBadges(pct);
+    render();
+  }catch(e){
+    st.saveStatus='Could not save — '+e.message;
+    if(el())el().textContent=st.saveStatus;
   }
 }
 
-// ── Boot ──────────────────────────────────────────────────────────────
-if(st.token){
-  loadDashboard();
-} else {
-  render();
+async function checkBadges(pct){
+  const totalQ=st.progress.reduce((a,p)=>a+p.total_questions,0);
+  const totalSess=st.sessions.length;
+  const earnedIds=new Set((await api('get-profile')).badges?.map(b=>b.badge_id)||[]);
+  const toAward=[];
+
+  if(totalSess>=1&&!earnedIds.has('first_quiz'))toAward.push('first_quiz');
+  if(st.streak>=3&&!earnedIds.has('streak_3'))toAward.push('streak_3');
+  if(st.streak>=7&&!earnedIds.has('streak_7'))toAward.push('streak_7');
+  if(totalQ>=100&&!earnedIds.has('q100'))toAward.push('q100');
+  if(totalQ>=500&&!earnedIds.has('q500'))toAward.push('q500');
+  if(pct>=90&&!earnedIds.has('ace'))toAward.push('ace');
+  if(pct===100&&!earnedIds.has('perfect'))toAward.push('perfect');
+  const sectionsStudied=new Set(st.sessions.flatMap(s=>s.section_ids||[]));
+  if(sectionsStudied.size>=11&&!earnedIds.has('all_sections'))toAward.push('all_sections');
+
+  for(const badge_id of toAward){
+    const res=await api('award-badge',{badge_id,user_id:st.userId});
+    if(res.awarded){
+      const def=BADGES_DEF.find(b=>b.id===badge_id);
+      if(def)showCelebration(def);
+      st.badges.push({badge_id,earned_at:new Date().toISOString()});
+      await new Promise(r=>setTimeout(r,3000));// wait before next badge
+    }
+  }
 }
+
+function showCelebration(badge){
+  document.getElementById('cel-icon').textContent=badge.icon;
+  document.getElementById('cel-title').textContent='Badge Unlocked!';
+  document.getElementById('cel-sub').textContent=`${badge.name} — ${badge.desc}`;
+  document.getElementById('celebration').style.display='flex';
+}
+function closeCelebration(){document.getElementById('celebration').style.display='none';}
+
+// ── BOOT ──────────────────────────────────────────────────────────────
+if(st.token){loadDashboard();}else{render();}
 </script>
 </body>
 </html>
