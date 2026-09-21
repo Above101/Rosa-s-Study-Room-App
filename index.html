@@ -91,6 +91,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .section-label{font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem}
 .section-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
 @media(max-width:520px){.section-grid{grid-template-columns:1fr}}
+.section-select-wrap{position:relative;margin-bottom:1.5rem}
+.section-select-wrap::after{content:'▾';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--accent);pointer-events:none;font-weight:600}
+.section-dropdown{width:100%;padding:14px 44px 14px 16px;border:2px solid var(--accent-border);border-radius:var(--radius-lg);background:var(--surface);color:var(--text);font-size:15px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;appearance:none;-webkit-appearance:none;transition:all .15s;line-height:1.4}
+.section-dropdown:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(27,79,138,.12)}
+.section-dropdown:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(27,79,138,.12)}
+.section-dropdown option{padding:8px;font-size:14px}
+.selected-preview{display:none;margin-top:10px;padding:12px 16px;background:linear-gradient(135deg,#1B4F8A 0%,#2E6FBF 100%);border-radius:var(--radius-lg);color:white}
+.selected-preview.visible{display:block}
+.selected-preview-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.selected-preview-law{font-size:11px;opacity:.8}
 .sec-btn{padding:10px 12px;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text-2);font-size:12px;cursor:pointer;text-align:left;line-height:1.45;font-family:'Inter',sans-serif;transition:all .15s;position:relative}
 .sec-btn:hover{border-color:var(--accent-border);background:var(--accent-bg);color:var(--text)}
 .sec-btn.active{border:2px solid #0D3B6E;background:linear-gradient(135deg,#1B4F8A 0%,#2E6FBF 100%);color:white;box-shadow:0 4px 12px rgba(27,79,138,.4);transform:translateY(-1px)}
@@ -453,32 +463,31 @@ function studyTab(){
     </div>
   </div>`:'';
 
-  const secBtns=SECTIONS.map(s=>{
-    const active=st.selectedSections.includes(s.id)?'active':'';
-    const prog=st.progress.find(p=>p.section_id===s.id);
-    const pct=prog?Math.round((prog.correct_answers/Math.max(prog.total_questions,1))*100):null;
-    return `<button class="sec-btn ${active}" data-sec="${s.id}">
-      <span class="sec-cite">${s.law}</span>${s.label}
-      <span style="font-size:10px;opacity:.85;margin-top:3px;display:block">
-        ${pct!==null?pct+'% accuracy ·'+' '+prog.sessions_taken+' session'+(prog.sessions_taken!==1?'s':''):'Not started yet'}
-      </span>
-    </button>`;
-  }).join('');
+  // section selection now handled by dropdown
 
   const timerLabel=st.settings.timed_mode?`${st.settings.timer_seconds}s per question`:'Off';
 
   return `${countdown}${goalCard}${weekly}
-  <div class="section-label">Pick a section to study
-    <span style="font-weight:400;font-style:normal;color:var(--accent);margin-left:6px">${st.selectedSections.length} of ${SECTIONS.length} selected</span>
-  </div>
-  <p style="font-size:13px;color:var(--text-2);margin-bottom:.75rem;line-height:1.5">
-    💡 <strong>Tip:</strong> Start with one section at a time for the best results — focused sessions help you retain more. You can always select multiple once you're ready to mix it up.
+  <div class="section-label">Choose a section to study</div>
+  <p style="font-size:13px;color:var(--text-2);margin-bottom:1rem;line-height:1.5">
+    💡 <strong>Tip:</strong> Focus on one section at a time for the best results.
   </p>
-  <div class="section-grid">${secBtns}</div>
-  <div class="sec-actions">
-    <button class="btn btn-sm" id="sel-none">Clear selection</button>
-    <button class="btn btn-sm" id="sel-all" style="color:var(--text-3);border-color:var(--border)">Select all sections</button>
+  <div class="section-select-wrap">
+    <select class="section-dropdown" id="section-dropdown">
+      <option value="">— Select a section —</option>
+      ${SECTIONS.map(s => {
+        const prog = st.progress.find(p => p.section_id === s.id);
+        const pct = prog ? Math.round((prog.correct_answers / Math.max(prog.total_questions, 1)) * 100) : null;
+        const status = pct !== null ? pct + '% accuracy' : 'Not started';
+        const selected = st.selectedSections.includes(s.id) ? 'selected' : '';
+        return '<option value="' + s.id + '" ' + selected + '>' + s.label + ' — ' + status + '</option>';
+      }).join('')}
+    </select>
   </div>
+  ${st.selectedSections.length ? `<div class="selected-preview visible">
+    <div class="selected-preview-title">✓ ${SECTIONS.find(s=>s.id===st.selectedSections[0])?.label}</div>
+    <div class="selected-preview-law">${SECTIONS.find(s=>s.id===st.selectedSections[0])?.law}</div>
+  </div>` : ''}
   <div class="controls-row">
     <div class="controls-left">
       <span class="field-label">Questions:</span>
@@ -709,17 +718,13 @@ function bind(){
   if(authBtn)authBtn.onclick=handleAuth;
   // Dashboard tabs
   document.querySelectorAll('[data-dashtab]').forEach(el=>el.onclick=()=>{st.dashTab=el.dataset.dashtab;st.msg='';render()});
-  // Section picker
-  document.querySelectorAll('.sec-btn').forEach(btn=>btn.onclick=()=>{
-    const id=btn.dataset.sec;
-    const idx=st.selectedSections.indexOf(id);
-    if(idx>=0)st.selectedSections.splice(idx,1);else st.selectedSections.push(id);
+  // Section dropdown
+  const dropdown=document.getElementById('section-dropdown');
+  if(dropdown)dropdown.onchange=e=>{
+    const val=e.target.value;
+    st.selectedSections=val?[val]:[];
     render();
-  });
-  const selAll=document.getElementById('sel-all');
-  if(selAll)selAll.onclick=()=>{st.selectedSections=SECTIONS.map(s=>s.id);render()};
-  const selNone=document.getElementById('sel-none');
-  if(selNone)selNone.onclick=()=>{st.selectedSections=[];render()};
+  };
   const qc=document.getElementById('q-count');
   if(qc)qc.onchange=e=>st.qCount=parseInt(e.target.value);
   // Start
