@@ -93,9 +93,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 @media(max-width:520px){.section-grid{grid-template-columns:1fr}}
 .sec-btn{padding:10px 12px;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text-2);font-size:12px;cursor:pointer;text-align:left;line-height:1.45;font-family:'Inter',sans-serif;transition:all .15s;position:relative}
 .sec-btn:hover{border-color:var(--accent-border);background:var(--accent-bg);color:var(--text)}
-.sec-btn.active{border-color:var(--accent);background:var(--accent);color:white;box-shadow:0 2px 8px rgba(27,79,138,.25)}
-.sec-btn.active .sec-cite{opacity:.85;color:rgba(255,255,255,.85)}
-.sec-btn.active::after{content:'✓';position:absolute;top:8px;right:10px;font-size:13px;font-weight:700;color:white}
+.sec-btn.active{border:2px solid #0D3B6E;background:linear-gradient(135deg,#1B4F8A 0%,#2E6FBF 100%);color:white;box-shadow:0 4px 12px rgba(27,79,138,.4);transform:translateY(-1px)}
+.sec-btn.active .sec-cite{opacity:1;color:#A8D4FF;font-weight:700}
+.sec-btn.active span{color:rgba(255,255,255,.9) !important}
+.sec-btn.active::after{content:'✓ Selected';position:absolute;top:8px;right:10px;font-size:10px;font-weight:700;color:white;background:rgba(255,255,255,.2);padding:2px 7px;border-radius:20px}
 .sec-cite{font-size:10px;display:block;margin-bottom:2px;font-weight:600;letter-spacing:.04em;opacity:.6}
 .sec-actions{display:flex;gap:8px;margin-bottom:1.5rem}
 .controls-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:1.25rem}
@@ -267,7 +268,7 @@ const st = {
   progress: [], sessions: [], bookmarks: [], badges: [],
   settings: { daily_goal: 10, timed_mode: false, timer_seconds: 30, exam_date: null },
   dashTab: 'study',
-  selectedSections: SECTIONS.map(s => s.id),
+  selectedSections: [],
   qCount: 10,
   questions: [], cur: 0, sel: null, answered: false,
   score: 0, wrong: [], questionLog: [],
@@ -777,6 +778,7 @@ async function handleAuth(){
       st.userId=data.user?.id;
       localStorage.setItem('token',st.token);
       localStorage.setItem('userId',st.userId);
+      localStorage.setItem('loginTime', Date.now().toString());
       await loadDashboard();
       return;
     }
@@ -787,7 +789,7 @@ async function handleAuth(){
 function logout(){
   clearTimer();
   localStorage.clear();
-  Object.assign(st,{token:'',userId:'',displayName:'',progress:[],sessions:[],bookmarks:[],badges:[],view:'auth',error:'',msg:'',streak:0,todayCount:0});
+  Object.assign(st,{token:'',userId:'',displayName:'',progress:[],sessions:[],bookmarks:[],badges:[],view:'auth',error:'',msg:'',streak:0,todayCount:0,selectedSections:[]});
   render();
 }
 
@@ -993,7 +995,21 @@ function showCelebration(badge){
 function closeCelebration(){document.getElementById('celebration').style.display='none';}
 
 // ── BOOT ──────────────────────────────────────────────────────────────
-if(st.token){loadDashboard();}else{render();}
+// Session expires after 8 hours
+const SESSION_HOURS = 8;
+const loginTime = parseInt(localStorage.getItem('loginTime') || '0');
+const sessionExpired = Date.now() - loginTime > SESSION_HOURS * 60 * 60 * 1000;
+if(st.token && !sessionExpired){
+  loadDashboard();
+} else {
+  if(sessionExpired && st.token){
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('loginTime');
+    st.token=''; st.userId='';
+  }
+  render();
+}
 </script>
 </body>
 </html>
