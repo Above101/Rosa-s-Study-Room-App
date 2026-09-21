@@ -794,6 +794,7 @@ function logout(){
 }
 
 async function loadDashboard(){
+  st.selectedSections = []; // Always start with nothing selected
   try{
     const [profData,prog,sess,bmarks]=await Promise.all([
       api('get-profile'),
