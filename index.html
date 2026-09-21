@@ -91,10 +91,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .section-label{font-size:12px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem}
 .section-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
 @media(max-width:520px){.section-grid{grid-template-columns:1fr}}
-.sec-btn{padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text-2);font-size:12px;cursor:pointer;text-align:left;line-height:1.45;font-family:'Inter',sans-serif;transition:all .1s}
-.sec-btn:hover{border-color:var(--accent-border);color:var(--text)}
-.sec-btn.active{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
-.sec-cite{font-size:10px;display:block;margin-bottom:2px;font-weight:600;letter-spacing:.04em;opacity:.7}
+.sec-btn{padding:10px 12px;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--text-2);font-size:12px;cursor:pointer;text-align:left;line-height:1.45;font-family:'Inter',sans-serif;transition:all .15s;position:relative}
+.sec-btn:hover{border-color:var(--accent-border);background:var(--accent-bg);color:var(--text)}
+.sec-btn.active{border-color:var(--accent);background:var(--accent);color:white;box-shadow:0 2px 8px rgba(27,79,138,.25)}
+.sec-btn.active .sec-cite{opacity:.85;color:rgba(255,255,255,.85)}
+.sec-btn.active::after{content:'✓';position:absolute;top:8px;right:10px;font-size:13px;font-weight:700;color:white}
+.sec-cite{font-size:10px;display:block;margin-bottom:2px;font-weight:600;letter-spacing:.04em;opacity:.6}
 .sec-actions{display:flex;gap:8px;margin-bottom:1.5rem}
 .controls-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:1.25rem}
 .controls-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -456,8 +458,8 @@ function studyTab(){
     const pct=prog?Math.round((prog.correct_answers/Math.max(prog.total_questions,1))*100):null;
     return `<button class="sec-btn ${active}" data-sec="${s.id}">
       <span class="sec-cite">${s.law}</span>${s.label}
-      <span style="font-size:10px;color:${pct!==null?(pct>=80?'var(--success)':pct>=60?'var(--accent)':'var(--danger)'):'var(--text-3)'};margin-top:3px;display:block">
-        ${pct!==null?pct+'% accuracy':'Not started yet'}
+      <span style="font-size:10px;opacity:.85;margin-top:3px;display:block">
+        ${pct!==null?pct+'% accuracy ·'+' '+prog.sessions_taken+' session'+(prog.sessions_taken!==1?'s':''):'Not started yet'}
       </span>
     </button>`;
   }).join('');
@@ -465,11 +467,16 @@ function studyTab(){
   const timerLabel=st.settings.timed_mode?`${st.settings.timer_seconds}s per question`:'Off';
 
   return `${countdown}${goalCard}${weekly}
-  <div class="section-label">Pick sections — ${st.selectedSections.length} selected</div>
+  <div class="section-label">Pick a section to study
+    <span style="font-weight:400;font-style:normal;color:var(--accent);margin-left:6px">${st.selectedSections.length} of ${SECTIONS.length} selected</span>
+  </div>
+  <p style="font-size:13px;color:var(--text-2);margin-bottom:.75rem;line-height:1.5">
+    💡 <strong>Tip:</strong> Start with one section at a time for the best results — focused sessions help you retain more. You can always select multiple once you're ready to mix it up.
+  </p>
   <div class="section-grid">${secBtns}</div>
   <div class="sec-actions">
-    <button class="btn btn-sm" id="sel-all">Select all</button>
-    <button class="btn btn-sm" id="sel-none">Clear</button>
+    <button class="btn btn-sm" id="sel-none">Clear selection</button>
+    <button class="btn btn-sm" id="sel-all" style="color:var(--text-3);border-color:var(--border)">Select all sections</button>
   </div>
   <div class="controls-row">
     <div class="controls-left">
