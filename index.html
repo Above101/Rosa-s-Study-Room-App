@@ -882,11 +882,15 @@ async function startQuiz(){
     for(const sid of st.selectedSections){
       const sec=SECTIONS.find(s=>s.id===sid);
       if(!sec)continue;
+      console.log('Fetching PDF:', sec.file);
       const res=await api('get-pdf',{filename:sec.file});
-      if(res.error)throw new Error(`PDF error for ${sec.file}: ${res.error}`);
-      if(res.b64)allB64.push(res.b64);
+      console.log('PDF response:', JSON.stringify(res).slice(0,200));
+      if(res.error)throw new Error(`PDF error for "${sec.file}": ${res.error}${res.detail?' — '+res.detail:''}`);
+      if(!res.b64||res.b64.length<100)throw new Error(`PDF empty for "${sec.file}". Check Supabase Storage → pdfs bucket is public and files are uploaded.`);
+      console.log('PDF loaded, b64 length:', res.b64.length, 'size:', res.size, 'bytes');
+      allB64.push(res.b64);
     }
-    if(!allB64.length)throw new Error('Could not load PDF files. Check Supabase storage.');
+    if(!allB64.length)throw new Error('No PDFs loaded. Make sure files are uploaded to Supabase Storage → pdfs bucket.');
     const b64=allB64[0];
     const selInfo=st.selectedSections.map(id=>{
       const s=SECTIONS.find(x=>x.id===id);
@@ -903,6 +907,7 @@ Required format:
 {"questions":[{"type":"extracted","section":"OAC 310:675","question":"Question text here?","options":["Option A","Option B","Option C","Option D"],"correct":0,"explanation":"Why A is correct.","cite":"OAC 310:675-1-2"}]}
 
 IMPORTANT: Return valid complete JSON only. No text before or after.`;
+    console.log('Calling Anthropic API...');
     const resp=await api('generate-questions',{
       model:'claude-sonnet-4-6',max_tokens:8000,
       messages:[{role:'user',content:[
@@ -910,6 +915,8 @@ IMPORTANT: Return valid complete JSON only. No text before or after.`;
         {type:'text',text:prompt}
       ]}]
     });
+    console.log('Anthropic resp type:', resp.type, 'error:', resp.error, 'content length:', resp.content?.length);
+    if(resp.error)throw new Error('Anthropic error: '+resp.error.message);
     const text=(resp.content||[]).map(b=>b.text||'').join('');
     const clean=text.replace(/```json|```/g,'').trim();
     let parsed;
