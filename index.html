@@ -892,15 +892,17 @@ async function startQuiz(){
       const s=SECTIONS.find(x=>x.id===id);
       return `- ${s.label} (${s.law})`;
     }).join('\n');
-    const prompt=`You are an Oklahoma NHA state licensing exam coach.
-Focus ONLY on these sections:
-${selInfo}
-1. EXTRACT any multiple choice questions already in the document (type: "extracted")
-2. GENERATE new questions from those sections (type: "generated")
-Generated questions MUST reference specific Oklahoma statutes/OAC rules, timeframes, thresholds, definitions.
-Return ONLY valid JSON:
-{"questions":[{"type":"extracted"|"generated","section":"short section name","question":"text","options":["A","B","C","D"],"correct":0,"explanation":"1-2 sentences","cite":"OAC 310:xxx or 63 O.S. § x"}]}
-Return up to ${st.qCount} questions. Prioritize extracted first. Make distractors plausible.`;
+    const prompt=`You are an Oklahoma NHA state licensing exam coach. Generate exactly ${st.qCount} multiple choice questions from the PDF for these sections: ${selInfo}
+
+Rules:
+- Extract real questions from the doc first (type:"extracted"), then generate new ones (type:"generated")
+- Base all questions on specific Oklahoma statutes and OAC rules
+- Return ONLY a JSON object, no markdown, no explanation
+
+Required format:
+{"questions":[{"type":"extracted","section":"OAC 310:675","question":"Question text here?","options":["Option A","Option B","Option C","Option D"],"correct":0,"explanation":"Why A is correct.","cite":"OAC 310:675-1-2"}]}
+
+IMPORTANT: Return valid complete JSON only. No text before or after.`;
     const resp=await api('generate-questions',{
       model:'claude-sonnet-4-6',max_tokens:8000,
       messages:[{role:'user',content:[
@@ -914,10 +916,24 @@ Return up to ${st.qCount} questions. Prioritize extracted first. Make distractor
     try {
       parsed=JSON.parse(clean);
     } catch(e) {
-      // Try to salvage partial JSON by extracting complete question objects
-      const matches=[...clean.matchAll(/\{[^{}]*"question"[^{}]*"options"[^{}]*"correct"[^{}]*\}/gs)];
-      if(matches.length===0) throw new Error('Could not parse questions from response. Try fewer questions or a smaller section.');
-      parsed={questions:matches.map(m=>{try{return JSON.parse(m[0]);}catch(e){return null;}}).filter(Boolean)};
+      // Log what we got for debugging
+      console.error('Raw response:', clean.slice(0,500));
+      // Try to find and parse the questions array directly
+      const arrMatch=clean.match(/"questions"\s*:\s*(\[[\s\S]*)/);
+      if(arrMatch){
+        try{
+          // Try to close the array/object if truncated
+          let arr=arrMatch[1];
+          // Remove trailing incomplete object
+          const lastComplete=arr.lastIndexOf('},');
+          if(lastComplete>0)arr=arr.slice(0,lastComplete+1)+']';
+          parsed={questions:JSON.parse(arr)};
+        }catch(e2){
+          throw new Error('Response was cut off. Try selecting 5 questions instead of '+st.qCount+'.');
+        }
+      } else {
+        throw new Error('Could not parse response. Try 5 questions first to test.');
+      }
     }
     st.questions=shuffle(parsed.questions);
     st.cur=0;st.score=0;st.sel=null;st.answered=false;st.wrong=[];st.questionLog=[];st.saveStatus='';
