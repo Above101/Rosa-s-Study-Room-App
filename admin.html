@@ -177,6 +177,7 @@ function dashView() {
     const scoreBadge = u.accuracy>=80 ? `<span class="badge badge-green">${u.accuracy}%</span>` : u.accuracy>=60 ? `<span class="badge badge-blue">${u.accuracy}%</span>` : u.accuracy!==null ? `<span class="badge badge-red">${u.accuracy}%</span>` : '<span class="badge badge-gray">—</span>';
     return `<tr>
       <td><strong>${u.display_name||'—'}</strong>${u.is_admin?'<span class="badge badge-blue" style="margin-left:6px">Admin</span>':''}</td>
+      <td style="color:var(--text-2)">${u.email||'—'}</td>
       <td>${activityBadge} ${lastActive}</td>
       <td>${u.sessions_count}</td>
       <td>${u.total_questions}</td>
@@ -229,9 +230,9 @@ function dashView() {
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th>Name</th><th>Last Active</th><th>Sessions</th><th>Questions</th><th>Accuracy</th><th>Sections</th>
+        <th>Name</th><th>Email</th><th>Last Active</th><th>Sessions</th><th>Questions</th><th>Accuracy</th><th>Sections</th>
       </tr></thead>
-      <tbody>${userRows||'<tr><td colspan="6" style="text-align:center;color:var(--text-3);padding:2rem">No users yet</td></tr>'}</tbody>
+      <tbody>${userRows||'<tr><td colspan="7" style="text-align:center;color:var(--text-3);padding:2rem">No users yet</td></tr>'}</tbody>
     </table>
   </div>
 
