@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rosa's Study Room — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:wght@500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7F6F2;--surface:#FFFFFF;--border:#DDD9D0;--border-strong:#C4BFB4;
+  --text:#1A1916;--text-2:#5C5A54;--text-3:#9C9A94;
+  --accent:#1B4F8A;--accent-bg:#EBF0F8;--accent-border:#A8C0DC;
+  --success:#1A6640;--success-bg:#EAF4EE;--success-border:#A0CCAF;
+  --danger:#8A1B1B;--danger-bg:#F8EBEB;--danger-border:#DCA8A8;
+  --radius:6px;--radius-lg:10px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
+.header{background:var(--accent);color:white;padding:0 1.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header-brand{font-family:'Lora',serif;font-size:16px;font-weight:500;color:white;display:flex;align-items:center;gap:10px}
+.header-brand span{font-size:11px;font-weight:500;background:rgba(255,255,255,.18);padding:2px 8px;border-radius:20px;letter-spacing:.06em;text-transform:uppercase;font-family:'Inter',sans-serif}
+.btn-logout{background:none;border:1px solid rgba(255,255,255,.3);color:white;padding:4px 12px;border-radius:var(--radius);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif}
+.main{max-width:1000px;margin:0 auto;padding:2rem 1.5rem 4rem}
+
+/* Auth */
+.auth-wrap{max-width:380px;margin:5rem auto;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:2rem}
+.auth-title{font-family:'Lora',serif;font-size:20px;font-weight:500;margin-bottom:.25rem}
+.auth-sub{font-size:13px;color:var(--text-3);margin-bottom:1.5rem}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.field input{width:100%;padding:10px 14px;border:1px solid var(--border-strong);border-radius:var(--radius);font-size:14px;background:var(--surface);color:var(--text);font-family:'Inter',sans-serif}
+.field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(27,79,138,.1)}
+.btn-primary{background:var(--accent);color:white;border:none;border-radius:var(--radius);padding:10px 20px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;width:100%}
+.btn-primary:hover{background:#163F70}
+.error-box{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:var(--danger);margin-top:10px}
+
+/* Dashboard */
+.page-title{font-family:'Lora',serif;font-size:22px;font-weight:500;margin-bottom:.35rem}
+.page-sub{color:var(--text-2);font-size:13px;margin-bottom:1.75rem}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.75rem}
+@media(max-width:600px){.stats-grid{grid-template-columns:1fr 1fr}}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+.stat-card-n{font-size:28px;font-weight:600;color:var(--text);line-height:1}
+.stat-card-l{font-size:12px;color:var(--text-3);margin-top:4px}
+.stat-card-sub{font-size:11px;color:var(--accent);margin-top:2px}
+.section-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem;margin-top:1.75rem}
+
+/* Table */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.75rem}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg)}
+td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAF8}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px}
+.badge-green{background:var(--success-bg);color:var(--success)}
+.badge-blue{background:var(--accent-bg);color:var(--accent)}
+.badge-red{background:var(--danger-bg);color:var(--danger)}
+.badge-gray{background:var(--bg);color:var(--text-3);border:1px solid var(--border)}
+
+/* Section bars */
+.section-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.section-row:last-child{border-bottom:none}
+.section-name{flex:1;font-size:13px;color:var(--text);min-width:0}
+.section-law{font-size:10px;color:var(--text-3)}
+.section-bar-wrap{width:120px;height:6px;background:var(--border);border-radius:3px;flex-shrink:0}
+.section-bar{height:100%;border-radius:3px;background:var(--accent)}
+.section-stats{font-size:12px;color:var(--text-2);text-align:right;flex-shrink:0;width:100px}
+
+/* Loading */
+.loading{text-align:center;padding:4rem;color:var(--text-3)}
+.spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Activity chart */
+.activity-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:.5rem}
+.activity-cell{height:16px;border-radius:3px;background:var(--border)}
+.activity-cell.low{background:#A8C0DC}
+.activity-cell.mid{background:#5A8FC7}
+.activity-cell.high{background:var(--accent)}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-brand">Rosa's Study Room <span>Admin</span></div>
+  <button class="btn-logout" id="logout-btn" style="display:none" onclick="logout()">Sign out</button>
+</header>
+<main class="main"><div id="app"></div></main>
+
+<script>
+const WORKER_URL = 'https://withered-forest-c81f.wanazgambo.workers.dev';
+
+const SECTIONS = [
+  {id:'ltcala',     label:'LTC Administrator Licensing Act',  law:'63 O.S. § 1-1949.1'},
+  {id:'oac679',     label:'OAC 310:679 LTC Administrators',   law:'OAC 310:679'},
+  {id:'pharmacy',   label:'Pharmacy',                         law:'59 O.S. § 367.3'},
+  {id:'hoover',     label:'Barbara E. Hoover Act',            law:'63 O.S. § 1-1956.1'},
+  {id:'oac677',     label:'OAC 310:677 Nurse Aide Training',  law:'OAC 310:677'},
+  {id:'alz',        label:"Alzheimer's / Dementia Disclosure",law:'63 O.S. § 1-879.2a'},
+  {id:'nhca',       label:'Nursing Home Care Act',            law:'63 O.S. § 1-1900.1'},
+  {id:'oac675',     label:'OAC 310:675 Nursing Facilities',   law:'OAC 310:675'},
+  {id:'continuum',  label:'Continuum of Care / Assisted Living',law:'63 O.S. § 1-890.1'},
+  {id:'residential',label:'Residential Care',                 law:'63 O.S. § 1-819.1'},
+  {id:'adultday',   label:'Adult Day Care',                   law:'63 O.S. § 1-870'},
+];
+
+const st = {
+  view: 'auth',
+  token: localStorage.getItem('adminToken') || '',
+  error: '',
+  stats: null, users: [], sections: [], recentSessions: [],
+};
+
+async function api(action, body={}) {
+  const r = await fetch(WORKER_URL, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','x-action':action,'Authorization':`Bearer ${st.token}`},
+    body: JSON.stringify(body),
+  });
+  return r.json();
+}
+
+function render() {
+  const app = document.getElementById('app');
+  document.getElementById('logout-btn').style.display = st.token ? 'block' : 'none';
+  if (st.view === 'auth') app.innerHTML = authView();
+  else if (st.view === 'loading') app.innerHTML = `<div class="loading"><div class="spinner"></div>Loading admin data…</div>`;
+  else if (st.view === 'dashboard') app.innerHTML = dashView();
+  bind();
+}
+
+function authView() {
+  return `<div class="auth-wrap">
+    <div class="auth-title">Admin Dashboard</div>
+    <div class="auth-sub">Sign in with your admin account</div>
+    <div class="field"><label>Email</label><input type="email" id="email" placeholder="you@email.com"></div>
+    <div class="field"><label>Password</label><input type="password" id="password" placeholder="••••••••"></div>
+    <button class="btn-primary" id="signin-btn">Sign In</button>
+    ${st.error ? `<div class="error-box">${st.error}</div>` : ''}
+  </div>`;
+}
+
+function dashView() {
+  const s = st.stats || {};
+  const now = Date.now();
+
+  // Activity heatmap — last 28 days
+  const sessionsByDay = {};
+  st.recentSessions.forEach(sess => {
+    const d = sess.created_at?.split('T')[0];
+    if (d) sessionsByDay[d] = (sessionsByDay[d] || 0) + 1;
+  });
+  const heatCells = Array.from({length:28},(_,i)=>{
+    const d = new Date(now - (27-i)*86400000).toISOString().split('T')[0];
+    const n = sessionsByDay[d] || 0;
+    const cls = n===0?'':n<=2?'low':n<=5?'mid':'high';
+    return `<div class="activity-cell ${cls}" title="${d}: ${n} sessions"></div>`;
+  }).join('');
+
+  // Section rows
+  const maxSessions = Math.max(...st.sections.map(s=>s.session_count||0), 1);
+  const secRows = SECTIONS.map(sec => {
+    const data = st.sections.find(s => s.section_id === sec.id);
+    const pct = data ? Math.round((data.session_count/maxSessions)*100) : 0;
+    return `<div class="section-row">
+      <div class="section-name">${sec.label}<div class="section-law">${sec.law}</div></div>
+      <div class="section-bar-wrap"><div class="section-bar" style="width:${pct}%"></div></div>
+      <div class="section-stats">${data ? `${data.session_count} sessions<br>${data.avg_score||'—'}% avg` : '<span style="color:var(--text-3)">No data</span>'}</div>
+    </div>`;
+  }).join('');
+
+  // User rows
+  const userRows = st.users.map(u => {
+    const lastActive = u.last_active ? new Date(u.last_active).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Never';
+    const daysSince = u.last_active ? Math.floor((now - new Date(u.last_active))/86400000) : 999;
+    const activityBadge = daysSince<=7 ? '<span class="badge badge-green">Active</span>' : daysSince<=30 ? '<span class="badge badge-blue">Recent</span>' : '<span class="badge badge-gray">Inactive</span>';
+    const scoreBadge = u.accuracy>=80 ? `<span class="badge badge-green">${u.accuracy}%</span>` : u.accuracy>=60 ? `<span class="badge badge-blue">${u.accuracy}%</span>` : u.accuracy!==null ? `<span class="badge badge-red">${u.accuracy}%</span>` : '<span class="badge badge-gray">—</span>';
+    return `<tr>
+      <td><strong>${u.display_name||'—'}</strong>${u.is_admin?'<span class="badge badge-blue" style="margin-left:6px">Admin</span>':''}</td>
+      <td>${activityBadge} ${lastActive}</td>
+      <td>${u.sessions_count}</td>
+      <td>${u.total_questions}</td>
+      <td>${scoreBadge}</td>
+      <td>${u.sections_studied} / 11</td>
+    </tr>`;
+  }).join('');
+
+  return `
+  <div class="page-title">Admin Dashboard</div>
+  <div class="page-sub">Rosa's Study Room — Oklahoma NHA Exam Prep</div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-card-n">${s.total_users||0}</div>
+      <div class="stat-card-l">Total Users</div>
+      <div class="stat-card-sub">${s.active_users_7d||0} active this week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-n">${s.total_sessions||0}</div>
+      <div class="stat-card-l">Quiz Sessions</div>
+      <div class="stat-card-sub">${s.active_users_30d||0} users this month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-n">${s.total_questions||0}</div>
+      <div class="stat-card-l">Questions Answered</div>
+      <div class="stat-card-sub">${s.avg_score||'—'}% average score</div>
+    </div>
+  </div>
+
+  <div class="section-label">Activity — Last 28 Days</div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:1.75rem">
+    <div class="activity-grid">${heatCells}</div>
+    <div style="display:flex;gap:8px;font-size:11px;color:var(--text-3);margin-top:8px;align-items:center">
+      <span>Less</span>
+      <div style="width:12px;height:12px;border-radius:2px;background:var(--border)"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:#A8C0DC"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:#5A8FC7"></div>
+      <div style="width:12px;height:12px;border-radius:2px;background:var(--accent)"></div>
+      <span>More</span>
+    </div>
+  </div>
+
+  <div class="section-label">Section Popularity</div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:1.75rem">
+    ${secRows}
+  </div>
+
+  <div class="section-label">Users (${st.users.length})</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Name</th><th>Last Active</th><th>Sessions</th><th>Questions</th><th>Accuracy</th><th>Sections</th>
+      </tr></thead>
+      <tbody>${userRows||'<tr><td colspan="6" style="text-align:center;color:var(--text-3);padding:2rem">No users yet</td></tr>'}</tbody>
+    </table>
+  </div>
+
+  <div style="font-size:12px;color:var(--text-3);text-align:center">
+    Last refreshed: ${new Date().toLocaleTimeString()} · 
+    <span style="cursor:pointer;color:var(--accent)" onclick="loadDashboard()">Refresh</span>
+  </div>`;
+}
+
+function bind() {
+  const signinBtn = document.getElementById('signin-btn');
+  if (signinBtn) signinBtn.onclick = handleSignin;
+  const email = document.getElementById('email');
+  const pwd = document.getElementById('password');
+  if (email) email.onkeydown = e => { if(e.key==='Enter') handleSignin(); };
+  if (pwd) pwd.onkeydown = e => { if(e.key==='Enter') handleSignin(); };
+}
+
+async function handleSignin() {
+  st.error = '';
+  const email = document.getElementById('email')?.value?.trim();
+  const password = document.getElementById('password')?.value?.trim();
+  if (!email || !password) { st.error = 'Please fill in both fields.'; render(); return; }
+  const btn = document.getElementById('signin-btn');
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const data = await api('auth-signin', {email, password});
+    if (data.error) throw new Error(data.error);
+    st.token = data.access_token;
+    localStorage.setItem('adminToken', st.token);
+    // Verify admin
+    const check = await api('check-admin');
+    if (!check.is_admin) {
+      st.token = ''; localStorage.removeItem('adminToken');
+      throw new Error('This account does not have admin access.');
+    }
+    await loadDashboard();
+  } catch(e) {
+    st.error = e.message;
+    render();
+  }
+}
+
+async function loadDashboard() {
+  st.view = 'loading'; render();
+  try {
+    const [adminData, usersData] = await Promise.all([
+      api('admin-stats'),
+      api('admin-users'),
+    ]);
+    st.stats = adminData.stats || {};
+    st.sections = adminData.sections || [];
+    st.recentSessions = adminData.recent_sessions || [];
+    st.users = usersData.users || [];
+    st.view = 'dashboard';
+  } catch(e) {
+    st.error = 'Failed to load: ' + e.message;
+    st.view = 'auth';
+  }
+  render();
+}
+
+function logout() {
+  localStorage.removeItem('adminToken');
+  st.token = ''; st.view = 'auth'; st.stats = null; st.users = [];
+  render();
+}
+
+// Boot
+if (st.token) loadDashboard();
+else render();
+</script>
+</body>
+</html>
